@@ -342,11 +342,11 @@
   <!-- STICKY CATEGORIES -->
   <div class="cats-wrapper">
     <div class="cats-scroll">
-      <button class="cat-btn active" onclick="scrollTo('desayunos')">🥚 Desayunos</button>
-      <button class="cat-btn" onclick="scrollTo('casados')">🍛 Casados</button>
-      <button class="cat-btn" onclick="scrollTo('bocas')">🫔 Bocas</button>
-      <button class="cat-btn" onclick="scrollTo('bebidas')">🥤 Bebidas</button>
-      <button class="cat-btn" onclick="scrollTo('postres')">🍮 Postres</button>
+      <button class="cat-btn active" onclick="goToSection(this,'desayunos')">🥚 Desayunos</button>
+      <button class="cat-btn" onclick="goToSection(this,'casados')">🍛 Casados</button>
+      <button class="cat-btn" onclick="goToSection(this,'bocas')">🫔 Bocas</button>
+      <button class="cat-btn" onclick="goToSection(this,'bebidas')">🥤 Bebidas</button>
+      <button class="cat-btn" onclick="goToSection(this,'postres')">🍮 Postres</button>
     </div>
   </div>
 
@@ -739,10 +739,15 @@
       bar.classList.toggle('visible', cart.length > 0);
     }
 
-    function scrollTo(id) {
+    function goToSection(btn, id) {
+      // Update active button
       document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-      event.target.classList.add('active');
-      document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+      btn.classList.add('active');
+      // Scroll to section
+      var el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     }
 
     function searchMenu(q) {
