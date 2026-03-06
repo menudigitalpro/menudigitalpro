@@ -739,13 +739,32 @@
       bar.classList.toggle('visible', cart.length > 0);
     }
 
+    function easeInOutCubic(t) {
+      return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2;
+    }
+
+    function smoothScrollTo(targetY, duration) {
+      var startY = window.pageYOffset;
+      var diff = targetY - startY;
+      var startTime = null;
+      function step(currentTime) {
+        if (!startTime) startTime = currentTime;
+        var elapsed = currentTime - startTime;
+        var progress = Math.min(elapsed / duration, 1);
+        var ease = easeInOutCubic(progress);
+        window.scrollTo(0, startY + diff * ease);
+        if (progress < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
     function goToSection(btn, id) {
       document.querySelectorAll('.cat-btn').forEach(function(b){ b.classList.remove('active'); });
       btn.classList.add('active');
       var el = document.getElementById(id);
       if (el) {
         var offset = el.getBoundingClientRect().top + window.pageYOffset - 60;
-        window.scrollTo({ top: offset, behavior: 'smooth' });
+        smoothScrollTo(offset, 800);
       }
     }
 
