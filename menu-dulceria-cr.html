@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="es" data-lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>La Dulce Vida — Menú</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --rose:    #C2587A;
+      --rose2:   #E8799A;
+      --blush:   #FAE8ED;
+      --cream:   #FDF6EE;
+      --caramel: #C97B3A;
+      --caramel2:#E69B50;
+      --brown:   #3D2314;
+      --brown2:  #5C3620;
+      --warm:    #F5E6D3;
+      --border:  rgba(194,88,122,0.18);
+      --border2: rgba(194,88,122,0.08);
+      --gray:    #8B6A72;
+    }
+    html { scroll-behavior: smooth; background: var(--cream); }
+    body {
+      font-family: 'Lato', sans-serif;
+      background: var(--cream);
+      color: var(--brown);
+      max-width: 520px; margin: 0 auto; min-height: 100vh;
+    }
+    @media (min-width: 800px) {
+      html { padding: 2rem 0; }
+      body { border-radius: 16px; box-shadow: 0 0 80px rgba(194,88,122,0.12); overflow-y: auto !important; }
+    }
+
+    /* LANG */
+    html[data-lang="es"] .en-only { display: none !important; }
+    html[data-lang="en"] .es-only { display: none !important; }
+
+    /* LANG BAR */
+    .lang-bar {
+      background: var(--rose); padding: 0.35rem 1.2rem;
+      display: flex; justify-content: flex-end; gap: 0.4rem; align-items: center;
+    }
+    .lang-btn {
+      background: transparent; border: 1px solid rgba(255,255,255,0.4);
+      color: rgba(255,255,255,0.7); font-size: 0.6rem; letter-spacing: 0.1em;
+      text-transform: uppercase; padding: 0.18rem 0.55rem; cursor: pointer;
+      transition: all 0.2s; font-family: 'Lato', sans-serif;
+    }
+    .lang-btn.active { background: white; color: var(--rose); border-color: white; font-weight: 700; }
+
+    /* HEADER */
+    .header {
+      background: linear-gradient(160deg, #fff5f8 0%, var(--blush) 50%, var(--warm) 100%);
+      border-bottom: 2px solid var(--border);
+      position: relative; overflow: hidden;
+    }
+    .header-dots {
+      position: absolute; inset: 0; pointer-events: none;
+      background-image: radial-gradient(circle, rgba(194,88,122,0.12) 1.5px, transparent 1.5px);
+      background-size: 22px 22px;
+      mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
+      -webkit-mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
+    }
+    .header-inner {
+      position: relative; z-index: 1;
+      padding: 2.5rem 1.5rem 2rem; text-align: center;
+    }
+    .header-bow {
+      font-size: 2.5rem; display: block; margin-bottom: 0.3rem;
+      animation: sway 3s ease-in-out infinite;
+    }
+    @keyframes sway { 0%,100%{transform:rotate(-4deg)} 50%{transform:rotate(4deg)} }
+    .header-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem; font-weight: 700; color: var(--rose);
+      letter-spacing: 0.04em; margin-bottom: 0.15rem;
+      text-shadow: 0 2px 8px rgba(194,88,122,0.15);
+    }
+    .header-name em { font-style: italic; color: var(--caramel); }
+    .header-sub {
+      font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--gray); margin-bottom: 0.8rem; font-weight: 400;
+    }
+    .header-tagline {
+      font-family: 'Playfair Display', serif; font-style: italic;
+      font-size: 0.8rem; color: rgba(61,35,20,0.45); margin-bottom: 1rem;
+    }
+    .header-info {
+      display: flex; justify-content: center; gap: 1.2rem;
+      font-size: 0.7rem; color: var(--gray); flex-wrap: wrap;
+    }
+    .header-divider {
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--rose), var(--caramel), var(--rose), transparent);
+    }
+
+    /* BANNER */
+    .banner {
+      background: var(--blush); padding: 0.55rem 1.5rem;
+      text-align: center; font-size: 0.75rem; color: var(--rose);
+      font-weight: 700; letter-spacing: 0.1em; border-bottom: 1px solid var(--border);
+    }
+
+    /* CATS */
+    .cats-wrapper { position: sticky; top: 0; z-index: 50; background: white; border-bottom: 2px solid var(--border2); box-shadow: 0 2px 12px rgba(194,88,122,0.08); }
+    .cats-scroll { display: flex; overflow-x: auto; scrollbar-width: none; }
+    .cats-scroll::-webkit-scrollbar { display: none; }
+    .cat-btn {
+      padding: 0.85rem 1.1rem; border: none; background: transparent; cursor: pointer;
+      font-family: 'Lato', sans-serif; font-size: 0.72rem; font-weight: 700;
+      color: var(--gray); white-space: nowrap; letter-spacing: 0.1em; text-transform: uppercase;
+      border-bottom: 3px solid transparent; transition: all 0.2s; flex-shrink: 0;
+    }
+    .cat-btn.active { color: var(--rose); border-bottom-color: var(--rose); }
+    .cat-btn:hover { color: var(--rose2); }
+
+    /* SEARCH */
+    .search-bar { padding: 0.65rem 1.2rem; background: white; border-bottom: 1px solid var(--border2); }
+    .search-input {
+      width: 100%; padding: 0.6rem 1rem 0.6rem 2.3rem;
+      border: 1.5px solid var(--border); border-radius: 50px;
+      font-family: 'Lato', sans-serif; font-size: 0.82rem;
+      background: var(--blush); color: var(--brown); outline: none; transition: border-color 0.2s;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='13' height='13' fill='%23C2587A' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.099zm-5.242 1.656a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: 0.75rem center;
+    }
+    .search-input:focus { border-color: var(--rose); background: white; }
+    .search-input::placeholder { color: rgba(139,106,114,0.6); }
+
+    /* FEATURED */
+    .featured {
+      margin: 0.8rem 1.2rem;
+      background: linear-gradient(135deg, #fff0f4, #fde8d0);
+      border: 1.5px solid var(--border); border-radius: 12px; padding: 1.2rem;
+      display: flex; align-items: center; gap: 1rem; position: relative; overflow: hidden;
+    }
+    .featured::after { content: '🌸'; position: absolute; right: 0.8rem; top: 0.5rem; font-size: 3rem; opacity: 0.08; }
+    .feat-emoji { font-size: 2.5rem; flex-shrink: 0; }
+    .feat-text { flex: 1; }
+    .feat-label { font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--rose); margin-bottom: 0.2rem; font-weight: 700; }
+    .feat-name { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--brown); margin-bottom: 0.15rem; }
+    .feat-desc { font-size: 0.7rem; color: var(--gray); line-height: 1.5; }
+    .feat-price { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--caramel); font-weight: 700; flex-shrink: 0; }
+
+    /* CONTENT */
+    .content { padding: 0 0 6rem; }
+
+    /* SECTION HEADER */
+    .section-header { padding: 1.8rem 1.2rem 0.7rem; display: flex; align-items: center; gap: 0.8rem; }
+    .sh-icon { font-size: 1.3rem; }
+    .sh-text { flex: 1; }
+    .sh-label { font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--rose); margin-bottom: 0.1rem; font-weight: 700; }
+    .sh-name { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--brown); font-style: italic; }
+    .sh-count { font-size: 0.65rem; color: var(--gray); background: var(--blush); padding: 0.15rem 0.6rem; border-radius: 50px; border: 1px solid var(--border); }
+
+    /* ITEMS */
+    .items-list { padding: 0 1.2rem; display: flex; flex-direction: column; gap: 0.65rem; margin-bottom: 0.5rem; }
+    .item-card {
+      background: white; border-radius: 10px; border: 1.5px solid var(--border2);
+      display: flex; align-items: stretch; cursor: pointer; overflow: hidden;
+      transition: border-color 0.25s, box-shadow 0.25s, transform 0.2s;
+    }
+    .item-card:hover { border-color: var(--rose); box-shadow: 0 4px 16px rgba(194,88,122,0.12); transform: translateY(-2px); }
+
+    .item-stripe { width: 4px; flex-shrink: 0; background: var(--blush); transition: background 0.25s; }
+    .item-card:hover .item-stripe { background: var(--rose); }
+
+    .item-emoji-wrap {
+      width: 76px; min-height: 88px; background: var(--blush); flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; font-size: 2.2rem;
+      border-right: 1.5px solid var(--border2); transition: background 0.25s;
+    }
+    .item-card:hover .item-emoji-wrap { background: #fff0f4; }
+    .item-emoji-wrap.warm { background: #fef3e8; }
+    .item-emoji-wrap.choc { background: #f5ede6; }
+    .item-emoji-wrap.mint { background: #edf7f0; }
+
+    .item-body { padding: 0.85rem 0.9rem; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+    .item-name { font-family: 'Playfair Display', serif; font-size: 0.95rem; color: var(--brown); margin-bottom: 0.1rem; font-weight: 600; }
+    .item-badges { display: flex; gap: 0.3rem; flex-wrap: wrap; margin-bottom: 0.3rem; }
+    .badge { font-size: 0.55rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.1rem 0.5rem; border-radius: 50px; font-weight: 700; border: 1px solid; }
+    .b-pop   { color: var(--rose); border-color: rgba(194,88,122,0.3); background: rgba(194,88,122,0.06); }
+    .b-new   { color: var(--caramel); border-color: rgba(201,123,58,0.3); background: rgba(201,123,58,0.06); }
+    .b-veg   { color: #4a9260; border-color: rgba(74,146,96,0.3); background: rgba(74,146,96,0.06); }
+    .b-sin   { color: #7b5ea7; border-color: rgba(123,94,167,0.3); background: rgba(123,94,167,0.06); }
+    .b-chef  { color: var(--brown2); border-color: rgba(92,54,32,0.3); background: rgba(92,54,32,0.06); }
+    .item-desc { font-size: 0.73rem; color: var(--gray); line-height: 1.55; margin-bottom: 0.55rem; }
+    .item-footer { display: flex; align-items: center; justify-content: space-between; }
+    .item-price { font-family: 'Playfair Display', serif; font-size: 1.05rem; color: var(--caramel); font-weight: 700; }
+    .item-price .curr { font-size: 0.65rem; font-family: 'Lato', sans-serif; font-weight: 400; }
+    .add-btn {
+      width: 30px; height: 30px; background: transparent; border: 1.5px solid var(--border);
+      color: var(--rose); font-size: 1.1rem; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .add-btn:hover { background: var(--rose); color: white; border-color: var(--rose); }
+
+    /* DIVIDER */
+    .section-divider { display: flex; align-items: center; gap: 0.8rem; padding: 0.4rem 1.2rem; margin: 0.3rem 0; }
+    .section-divider::before,.section-divider::after { content:''; flex:1; height:1px; background: linear-gradient(90deg, transparent, var(--border)); }
+    .section-divider:nth-child(even)::before { background: linear-gradient(90deg, var(--border), transparent); }
+    .section-divider span { color: var(--rose); font-size: 0.75rem; }
+
+    /* CART */
+    .cart-bar {
+      position: fixed; bottom: 1.2rem; left: 50%; transform: translateX(-50%);
+      background: linear-gradient(135deg, var(--rose), var(--rose2));
+      color: white; padding: 0.85rem 1.8rem; border-radius: 50px;
+      display: flex; align-items: center; gap: 1rem;
+      box-shadow: 0 8px 30px rgba(194,88,122,0.4);
+      cursor: pointer; z-index: 100; font-size: 0.82rem;
+      min-width: 240px; justify-content: space-between;
+      opacity: 0; pointer-events: none; transition: opacity 0.3s, transform 0.3s;
+      letter-spacing: 0.05em;
+    }
+    .cart-bar.visible { opacity: 1; pointer-events: all; }
+    .cart-count { background: white; color: var(--rose); width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; }
+    .cart-total { font-family: 'Playfair Display', serif; font-size: 1rem; }
+
+    /* INFO FOOTER */
+    .info-footer { background: var(--blush); padding: 2rem 1.5rem; border-top: 2px solid var(--border); }
+    .info-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--rose); text-align: center; margin-bottom: 1.2rem; font-style: italic; }
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-bottom: 1.2rem; }
+    .info-item { background: white; border: 1.5px solid var(--border2); padding: 0.85rem; border-radius: 8px; }
+    .info-label { font-size: 0.55rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--rose); margin-bottom: 0.3rem; font-weight: 700; }
+    .info-value { font-size: 0.78rem; color: var(--brown2); line-height: 1.55; }
+    .map-wrap { border-radius: 10px; overflow: hidden; position: relative; border: 1.5px solid var(--border); }
+    .powered-by { text-align: center; padding: 0.8rem; font-size: 0.65rem; color: var(--gray); background: white; border-top: 1px solid var(--border2); }
+    .powered-by span { color: var(--rose); font-weight: 700; }
+
+    /* MODAL */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(61,35,20,0.6); z-index: 200; display: flex; align-items: flex-end; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal { background: var(--cream); width: 100%; border-top: 2px solid var(--border); border-radius: 16px 16px 0 0; padding: 1.5rem; transform: translateY(100%); transition: transform 0.35s cubic-bezier(0.32,0.72,0,1); max-height: 80vh; overflow-y: auto; position: relative; }
+    .modal-overlay.open .modal { transform: translateY(0); }
+    .modal-handle { width: 36px; height: 3px; background: var(--border); border-radius: 2px; margin: 0 auto 1.2rem; }
+    .modal-emoji { font-size: 3.5rem; text-align: center; margin-bottom: 0.6rem; }
+    .modal-name { font-family: 'Playfair Display', serif; font-size: 1.4rem; text-align: center; color: var(--brown); margin-bottom: 0.8rem; }
+    .modal-desc { font-size: 0.85rem; color: var(--gray); text-align: center; line-height: 1.7; margin-bottom: 1.2rem; }
+    .modal-price { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--caramel); text-align: center; font-weight: 700; margin-bottom: 1.5rem; }
+    .modal-btn { width: 100%; background: var(--rose); color: white; border: none; padding: 1rem; font-family: 'Lato', sans-serif; font-size: 0.85rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; cursor: pointer; border-radius: 50px; transition: background 0.2s; }
+    .modal-btn:hover { background: var(--rose2); }
+    .modal-close { position: absolute; top: 1.2rem; right: 1.2rem; background: var(--blush); border: 1px solid var(--border); color: var(--gray); width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: 0.8rem; }
+  </style>
+</head>
+<body>
+
+  <!-- LANG BAR -->
+  <div class="lang-bar">
+    <button class="lang-btn" onclick="setLang('en')" id="btn-en">🇺🇸 EN</button>
+    <button class="lang-btn active" onclick="setLang('es')" id="btn-es">🇨🇷 ES</button>
+  </div>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-dots"></div>
+    <div class="header-inner">
+      <span class="header-bow">🎀</span>
+      <div class="header-name">La <em>Dulce</em> Vida</div>
+      <div class="header-sub en-only">Handmade Sweets &amp; Pastries · San José</div>
+      <div class="header-sub es-only">Dulcería Artesanal · San José, CR</div>
+      <div class="header-tagline en-only">"Every bite is a little celebration"</div>
+      <div class="header-tagline es-only">"Cada bocado es una pequeña celebración"</div>
+      <div class="header-info">
+        <span>⏰ 8:00am – 7:00pm</span>
+        <span>📍 Escalante, SJ</span>
+        <span>⭐ 4.9</span>
+      </div>
+    </div>
+    <div class="header-divider"></div>
+  </header>
+
+  <div class="banner en-only">🍰 Pre-orders available for events and celebrations · WhatsApp us!</div>
+  <div class="banner es-only">🍰 Pedidos especiales para eventos y celebraciones · ¡Escríbenos!</div>
+
+  <!-- CATS -->
+  <div class="cats-wrapper">
+    <div class="cats-scroll">
+      <button class="cat-btn active" onclick="goToSection(this,'pasteles')">
+        <span class="en-only">🎂 Cakes</span><span class="es-only">🎂 Pasteles</span>
+      </button>
+      <button class="cat-btn" onclick="goToSection(this,'galletas')">
+        <span class="en-only">🍪 Cookies</span><span class="es-only">🍪 Galletas</span>
+      </button>
+      <button class="cat-btn" onclick="goToSection(this,'bombones')">
+        <span class="en-only">🍫 Chocolates</span><span class="es-only">🍫 Bombones</span>
+      </button>
+      <button class="cat-btn" onclick="goToSection(this,'helados')">
+        <span class="en-only">🍦 Ice Cream</span><span class="es-only">🍦 Helados</span>
+      </button>
+      <button class="cat-btn" onclick="goToSection(this,'bebidas')">
+        <span class="en-only">☕ Drinks</span><span class="es-only">☕ Bebidas</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="search-bar">
+    <input class="search-input en-only" type="text" placeholder="Search sweets..." oninput="searchMenu(this.value)"/>
+    <input class="search-input es-only" type="text" placeholder="Buscar delicias..." oninput="searchMenu(this.value)"/>
+  </div>
+
+  <!-- FEATURED -->
+  <div class="featured">
+    <div class="feat-emoji">🎂</div>
+    <div class="feat-text">
+      <div class="feat-label en-only">⭐ Today's Special</div>
+      <div class="feat-label es-only">⭐ Especial del Día</div>
+      <div class="feat-name en-only">Rose & Pistachio Layer Cake</div>
+      <div class="feat-name es-only">Pastel de Rosa y Pistacho</div>
+      <div class="feat-desc en-only">4 layers of rose sponge, pistachio cream and white chocolate ganache</div>
+      <div class="feat-desc es-only">4 capas de bizcocho de rosa, crema de pistacho y ganache de chocolate blanco</div>
+    </div>
+    <div class="feat-price"><span style="font-size:0.65rem">₡</span>8.500</div>
+  </div>
+
+  <div class="content">
+
+    <!-- PASTELES -->
+    <div id="pasteles">
+      <div class="section-header">
+        <div class="sh-icon">🎂</div>
+        <div class="sh-text">
+          <div class="sh-label en-only">Freshly baked</div>
+          <div class="sh-label es-only">Recién horneados</div>
+          <div class="sh-name en-only">Cakes &amp; Cupcakes</div>
+          <div class="sh-name es-only">Pasteles &amp; Cupcakes</div>
+        </div>
+        <div class="sh-count en-only">5 options</div>
+        <div class="sh-count es-only">5 opciones</div>
+      </div>
+      <div class="items-list">
+
+        <div class="item-card" onclick="openModal('Red Velvet','Classic red velvet with cream cheese frosting, raspberry coulis and edible flowers.','Red velvet clásico con frosting de queso crema, coulis de frambuesa y flores comestibles.','🍰','₡4.500')">
+          <div class="item-stripe"></div>
+          <div class="item-emoji-wrap">🍰</div>
+          <div class="item-body">
+            <div>
+              <div class="item-name">Red Velvet</div>
+              <div class="item-badges"><span class="badge b-pop">Popular</span><span class="badge b-chef">Artesanal</span></div>
+              <div class="item-desc en-only">Classic red velvet with cream cheese frosting and raspberry coulis.</div>
+              <div class="item-desc es-only">Bizcocho rojo con frosting de queso crema y coulis de frambuesa.</div>
+            </div>
+            <div class="item-footer">
+              <div class="item-price"><span class="curr">₡</span>4.500</div>
+              <button class="add-btn" onclick="addToCart(event,'Red Velvet',4500)">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="item-card" onclick="openModal('Tres Leches de Vainilla','Sponge soaked in three milks, whipped cream, caramel drizzle and cinnamon.','Bizcocho empapado en tres leches, crema batida, hilo de caramelo y canela.','🧁','₡3.800')">
+          <div class="item-stripe"></div>
+          <div class="item-emoji-wrap warm">🧁</div>
+          <div class="item-body">
+            <div>
+              <div class="item-name en-only">Vanilla Tres Leches</div>
+              <div class="item-name es-only">Tres Leches de Vainilla</div>
+              <div class="item-badges"><span class="badge b-pop">Popular</span></div>
+              <div class="item-desc en-only">Sponge soaked in three milks, whipped cream and caramel.</div>
+              <div class="item-desc es-only">Bizcocho en tres leches, crema batida e hilo de caramelo.</div>
+            </div>
+            <div class="item-footer">
+              <div class="item-price"><span class="curr">₡</span>3.800</div>
+              <button class="add-btn" onclick="addToCart(event,'Tres Leches',3800)">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="item-card" onclick="openModal('Pastel de Rosa y Pistacho','4 layers of rosewater sponge, pistachio cream, white chocolate ganache and dried petals.','4 capas de bizcocho de agua de rosa, crema de pistacho, ganache de chocolate blanco y pétalos secos.','🌹','₡8.500')">
+          <div class="item-stripe"></div>
+          <div class="item-emoji-wrap">🌹</div>
+          <div class="item-body">
+            <div>
+              <div class="item-name en-only">Rose &amp; Pistachio Cake</div>
+              <div class="item-name es-only">Pastel de Rosa y Pistacho</div>
+              <div class="item-badges"><span class="badge b-new">Especial</span><span class="badge b-veg">Vegetal</span></div>
+              <div class="item-desc en-only">Rose sponge, pistachio cream, white chocolate ganache and dried petals.</div>
+              <div class="item-desc es-only">Bizcocho de rosa, crema de pistacho, ganache blanco y pétalos secos.</div>
+            </div>
+            <div class="item-footer">
+              <div class="item-price"><span class="curr">₡</span>8.500</div>
+              <button class="add-btn" onclick="addToCart(event,'Pastel Rosa Pistacho',8500)">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="item-card" onclick="openModal('Cupcake de Limón','Fluffy lemon cupcake with lemon curd filling and Italian meringue toasted on top.','Cupcake esponjoso de limón con relleno de lemon curd y merengue italiano tostado.','🍋','₡1.800')">
+          <div class="item-stripe"></div>
+          <div class="item-emoji-wrap mint">🍋</div>
+          <div class="item-body">
+            <div>
+              <div class="item-name en-only">Lemon Cupcake</div>
+              <div class="item-name es-only">Cupcake de Limón</div>
+              <div class="item-badges"><span class="badge b-pop">Popular</span></div>
+              <div class="item-desc en-only">Lemon cupcake, lemon curd filling and toasted Italian meringue.</div>
+              <div class="item-desc es-only">Cupcake de limón, relleno de lemon curd y merengue italiano tostado.</div>
+            </div>
+            <div class="item-footer">
+              <div class="item-price"><span class="curr">₡</span>1.800</div>
+              <button class="add-btn" onclick="addToCart(event,'Cupcake Limón',1800)">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="item-card" onclick="openModal('Brownie de Nutella','Fudgy chocolate brownie, Nutella swirl, toasted hazelnuts and fleur de sel.','Brownie húmedo de chocolate con remolino de Nutella, avellanas tostadas y flor de sal.','🍫','₡2.200')">
+          <div class="item-stripe"></div>
+          <div class="item-emoji-wrap choc">🍫</div>
+          <div class="item-body">
+            <div>
+              <div class="item-name en-only">Nutella Brownie</div>
+              <div class="item-name es-only">Brownie de Nutella</div>
+              <div class="item-badges"><span class="badge b-chef">Artesanal</span></div>
+              <div class="item-desc en-only">Fudgy brownie, Nutella swirl, toasted hazelnuts and fleur de sel.</div>
+              <div class="item-desc es-only">Brownie húmedo, remolino de Nutella, avellanas tostadas y flor de sal.</div>
+            </div>
+            <div class="item-footer">
+              <div class="item-price"><span class="curr">₡</span>2.200</div>
+              <button class="add-btn" onclick="addToCart(event,'Brownie Nutella',2200)">+</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="section-divider"><span>🌸</span></div>
+
+    <!-- GALLETAS -->
+    <div id="galletas">
+      <div class="section-header">
+        <div class="sh-icon">🍪</div>
+        <div class="sh-text">
+          <div class="sh-label en-only">Baked daily</div>
+          <div class="sh-label es-only">Horneadas diariamente</div>
+          <div class="sh-name en-only">Cookies &amp; Biscuits</div>
+          <div class="sh-name es-only">Galletas &amp; Biscochos</div>
+        </div>
+        <div class="sh-count en-only">4 options</div>
+        <div class="sh-count es-only">4 opciones</div>
+      </div>
+      <div class="items-list">
+
+        <div class="item-card" onclick="openModal('Choco Chip Cookie','Giant cookie with dark and white chocolate chips, golden and crispy outside, gooey inside.','Galleta gigante con chips de chocolate negro y blanco. Dorada y crocante afuera, suave adentro.','🍪','₡1.200')">
+          <div class="item-stripe"></div>
+          <div class="item-emoji-wrap warm">🍪</div>
+          <div class="item-body">
+            <div>
+              <div class="item-name">Choco Chip Cookie</div>
+              <div class="item-badges"><span class="badge b-pop">Popular</span></div>
+              <div class="item-desc en-only">Dark and white chocolate chips. Crispy outside, gooey inside.</div>
+              <div class="item-desc es-only">Chips de chocolate negro y blanco. Crocante afuera, suave adentro.</div>
+            </div>
+            <div class="item-footer">
+              <div class="item-price"><span class="curr">₡</span>1.200</div>
+              <button class="add-btn" onclick="addToCart(event,'Choco Chip Cookie',1200)">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="item-card" onclick="openModal('Alfajor de Maicena','Two cornstarch cookies with dulce de leche filling, rolled in coconut.','Dos galletas de maicena con relleno de dulce de leche, rebozadas en coco rallado.','🥥','₡1.500')">
+          <div class="item-stripe"></div>
+          <div class="item-emoji-wrap">🥥</div>
+          <div class="item-body">
+            <div>
+              <div class="item-name en-only">Dulce de Leche Alfajor</div>
+              <div class="item-name es-only">Alfajor de Maicena</div>
+              <div class="item-badges"><span class="badge b-new">Favorito</span></div>
+              <div class="item-desc en-only">Two cornstarch cookies with dulce de leche, rolled in coconut.</div>
+              <div class="item-desc es-only">Galletas de maicena con dulce de leche, rebozadas en coco rallado.</div>
+            </div>
+            <div class="item-footer">
+              <div class="item-price"><span class="curr">₡</span>1.500</div>
+              <button class="add-btn" onclick="addToCart(event,'Alfajor',1500)">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="item-card" onclick="openModal('Galleta Sin Gluten','Oat, almond and honey cookie. Gluten-free and delicious.','Galleta de avena, almendra y miel. Sin gluten y deliciosa.','🌾','₡1.400')">
+          <div class="item-stripe"></div>
+          <div class="item-emoji-wrap mint">🌾</div>
+          <div class="item-body">
+            <div>
+              <div class="item-name en-only">Gluten-Free Cookie</div>
+              <div class="item-name es-only">Galleta Sin Gluten</div>
+              <div class="item-badges"><span class="badge b-sin">Sin Gluten</span><span class="badge b-veg">Vegano</span></div>
+              <div class="item-desc en-only">Oat, almond and honey. Gluten-free, dairy-free and vegan.</div>
+              <div class="item-desc es-only">Avena, almendra y miel. Sin gluten, sin lácteos y vegana.</div>
+            </div>
+            <div class="item-footer">
+              <div class="item-price"><span class="curr">₡</span>1.400</div>
+              <button class="add-btn" onclick="addToCart(event,'Galleta Sin Gluten',1400)">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="item-card" onclick="openModal('Speculoos','Belgian-spiced shortbread with cinnamon, cardamom and brown sugar. Perfect with coffee.','Shortbread belga especiado con canela, cardamomo y azúcar morena. Perfecto con café.','🫚','₡1.100')">
+          <div class="item-stripe"></div>
+          <div class="item-emoji-wrap choc">🫚</div>
+          <div class="item-body">
+            <div>
+              <div class="item-name">Speculoos</div>
+              <div class="item-badges"><span class="badge b-chef">Importado</span></div>
+              <div class="item-desc en-only">Belgian-spiced shortbread with cinnamon, cardamom and brown sugar.</div>
+              <div class="item-desc es-only">Shortbread belga con canela, cardamomo y azúcar morena.</div>
+            </div>
+            <div class="item-footer">
+              <div class="item-price"><span class="curr">₡</span>1.100</div>
+              <button class="add-btn" onclick="addToCart(event,'Speculoos',1100)">+</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="section-divider"><span>🍬</span></div>
+
+    <!-- BOMBONES -->
+    <div id="bombones">
+      <div class="section-header">
+        <div class="sh-icon">🍫</div>
+        <div class="sh-text">
+          <div class="sh-label en-only">Handcrafted</div>
+          <div class="sh-label es-only">Hechos a mano</div>
+          <div class="sh-name en-only">Chocolates &amp; Bonbons</div>
+          <div class="sh-name es-only">Bombones &amp; Chocolates</div>
+        </div>
+        <div class="sh-count en-only">3 options</div>
+        <div class="sh-count es-only">3 opciones</div>
+      </div>
+      <div class="items-list">
+
+        <div class="item-card" onclick="openModal('Caja de 6 Bombones','Selection of 6 artisan bonbons: dark ganache, salted caramel, raspberry, pistachio, mango and mojito.','Selección de 6 bombones artesanales: ganache negro, caramelo salado, frambuesa, pistacho, mango y mojito.','🎁','₡4.800')">
+          <div class="item-stripe"></div>
+          <div class="item-emoji-wrap choc">🎁</div>
+          <div class="item-body">
+            <div>
+              <div class="item-name en-only">Box of 6 Bonbons</div>
+              <div class="item-name es-only">Caja de 6 Bombones</div>
+              <div class="item-badges"><span class="badge b-pop">Popular</span><span class="badge b-chef">Artesanal</span></div>
+              <div class="item-desc en-only">6 artisan bonbons: dark ganache, salted caramel, raspberry, pistachio, mango and mojito.</div>
+              <div class="item-desc es-only">6 bombones artesanales: ganache negro, caramelo salado, frambuesa, pistacho, mango y mojito.</div>
+            </div>
+            <div class="item-footer">
+              <div class="item-price"><span class="curr">₡</span>4.800</div>
+              <button class="add-btn" onclick="addToCart(event,'Caja Bombones',4800)">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="item-card" onclick="openModal('Trufas de Champagne','Dark chocolate truffles with Champagne ganache center, dusted in cocoa powder.','Trufas de chocolate negro con centro de ganache de Champagne, rebozadas en cacao en polvo.','🍾','₡3.200')">
+          <div class="item-stripe"></div>
+          <div class="item-emoji-wrap choc">🍾</div>
+          <div class="item-body">
+            <div>
+              <div class="item-name en-only">Champagne Truffles</div>
+              <div class="item-name es-only">Trufas de Champagne</div>
+              <div class="item-badges"><span class="badge b-new">Premium</span></div>
+              <div class="item-desc en-only">Dark chocolate truffles with Champagne ganache, dusted in cocoa.</div>
+              <div class="item-desc es-only">Trufas de chocolate negro con ganache de Champagne y cacao en polvo.</div>
+            </div>
+            <div class="item-footer">
+              <div class="item-price"><span class="curr">₡</span>3.200</div>
+              <button class="add-btn" onclick="addToCart(event,'Trufas Champagne',3200)">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="item-card" onclick="openModal('Bark de Chocolate Blanco','White chocolate bark with dried strawberries, pistachios and rose petals.','Bark de chocolate blanco con fresas deshidratadas, pistachos y pétalos de rosa.','🌸','₡2.600')">
+          <div class="item-stripe"></div>
+          <div class="item-emoji-wrap">🌸</div>
+          <div class="item-body">
+            <div>
+              <div class="item-name en-only">White Chocolate Bark</div>
+              <div class="item-name es-only">Bark de Chocolate Blanco</div>
+              <div class="item-badges"><span class="badge b-veg">Vegetal</span></div>
+              <div class="item-desc en-only">White chocolate with dried strawberries, pistachios and rose petals.</div>
+              <div class="item-desc es-only">Chocolate blanco con fresas deshidratadas, pistachos y pétalos de rosa.</div>
+            </div>
+            <div class="item-footer">
+              <div class="item-price"><span class="curr">₡</span>2.600</div>
+              <button class="add-btn" onclick="addToCart(event,'Bark Chocolate',2600)">+</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="section-divider"><span>🍦</span></div>
+
+    <!-- HELADOS -->
+    <div id="helados">
+      <div class="section-header">
+        <div class="sh-icon">🍦</div>
+        <div class="sh-text">
+          <div class="sh-label en-only">Creamy &amp; cold</div>
+          <div class="sh-label es-only">Cremosos y fríos</div>
+          <div class="sh-name en-only">Ice Creams &amp; Sorbets</div>
+          <div class="sh-name es-only">Helados &amp; Sorbetes</div>
+        </div>
+        <div class="sh-count en-only">3 options</div>
+        <div class="sh-count es-only">3 opciones</div>
+      </div>
+      <div class="items-list">
+
+        <div class="item-card" onclick="openModal('Copa Sundae','Vanilla gelato, warm chocolate sauce, whipped cream, caramel, pecans and a cherry on top.','Gelato de vainilla, salsa de chocolate caliente, crema batida, caramelo, pecanas y cereza.','🍨','₡2.800')">
+          <div class="item-stripe"></div>
+          <div class="item-emoji-wrap">🍨</div>
+          <div class="item-body">
+            <div>
+              <div class="item-name en-only">Sundae Cup</div>
+              <div class="item-name es-only">Copa Sundae</div>
+              <div class="item-badges"><span class="badge b-pop">Popular</span></div>
+              <div class="item-desc en-only">Vanilla gelato, warm chocolate sauce, whipped cream, caramel and pecans.</div>
+              <div class="item-desc es-only">Gelato de vainilla, chocolate caliente, crema batida, caramelo y pecanas.</div>
+            </div>
+            <div class="item-footer">
+              <div class="item-price"><span class="curr">₡</span>2.800</div>
+              <button class="add-btn" onclick="addToCart(event,'Copa Sundae',2800)">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="item-card" onclick="openModal('Sorbete de Maracuyá','100% natural passion fruit sorbet. No dairy, no added sugar. Vegan and refreshing.','Sorbete de maracuyá 100% natural. Sin lácteos, sin azúcar agregada. Vegano y refrescante.','🌻','₡2.000')">
+          <div class="item-stripe"></div>
+          <div class="item-emoji-wrap mint">🌻</div>
+          <div class="item-body">
+            <div>
+              <div class="item-name en-only">Passion Fruit Sorbet</div>
+              <div class="item-name es-only">Sorbete de Maracuyá</div>
+              <div class="item-badges"><span class="badge b-veg">Vegano</span><span class="badge b-sin">Sin Azúcar</span></div>
+              <div class="item-desc en-only">100% natural passion fruit. No dairy, no added sugar. Vegan.</div>
+              <div class="item-desc es-only">Maracuyá 100% natural. Sin lácteos ni azúcar agregada. Vegano.</div>
+            </div>
+            <div class="item-footer">
+              <div class="item-price"><span class="curr">₡</span>2.000</div>
+              <button class="add-btn" onclick="addToCart(event,'Sorbete Maracuyá',2000)">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="item-card" onclick="openModal('Waffle con Helado','Crispy waffle, 2 scoops of your choice, berry compote and powdered sugar.','Waffle crocante, 2 bolas a elección, compota de berries y azúcar glass.','🧇','₡3.500')">
+          <div class="item-stripe"></div>
+          <div class="item-emoji-wrap warm">🧇</div>
+          <div class="item-body">
+            <div>
+              <div class="item-name en-only">Waffle &amp; Ice Cream</div>
+              <div class="item-name es-only">Waffle con Helado</div>
+              <div class="item-badges"><span class="badge b-new">Nuevo</span></div>
+              <div class="item-desc en-only">Crispy waffle, 2 scoops of your choice, berry compote and powdered sugar.</div>
+              <div class="item-desc es-only">Waffle crocante, 2 bolas a elección, compota de berries y azúcar glass.</div>
+            </div>
+            <div class="item-footer">
+              <div class="item-price"><span class="curr">₡</span>3.500</div>
+              <button class="add-btn" onclick="addToCart(event,'Waffle Helado',3500)">+</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="section-divider"><span>☕</span></div>
+
+    <!-- BEBIDAS -->
+    <div id="bebidas">
+      <div class="section-header">
+        <div class="sh-icon">☕</div>
+        <div class="sh-text">
+          <div class="sh-label en-only">Warm &amp; cold</div>
+          <div class="sh-label es-only">Calientes y fríos</div>
+          <div class="sh-name en-only">Drinks</div>
+          <div class="sh-name es-only">Bebidas</div>
+        </div>
+        <div class="sh-count en-only">3 options</div>
+        <div class="sh-count es-only">3 opciones</div>
+      </div>
+      <div class="items-list" style="margin-bottom:5rem;">
+
+        <div class="item-card" onclick="openModal('Chocolate Caliente','Rich Belgian hot chocolate with milk foam, cinnamon and mini marshmallows.','Chocolate belga caliente con espuma de leche, canela y mini marshmallows.','☕','₡1.800')">
+          <div class="item-stripe"></div>
+          <div class="item-emoji-wrap choc">☕</div>
+          <div class="item-body">
+            <div>
+              <div class="item-name en-only">Hot Chocolate</div>
+              <div class="item-name es-only">Chocolate Caliente</div>
+              <div class="item-badges"><span class="badge b-pop">Popular</span></div>
+              <div class="item-desc en-only">Rich Belgian chocolate with milk foam, cinnamon and mini marshmallows.</div>
+              <div class="item-desc es-only">Chocolate belga con espuma de leche, canela y mini marshmallows.</div>
+            </div>
+            <div class="item-footer">
+              <div class="item-price"><span class="curr">₡</span>1.800</div>
+              <button class="add-btn" onclick="addToCart(event,'Chocolate Caliente',1800)">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="item-card" onclick="openModal('Matcha Latte Frío','Ceremonial matcha with oat milk, vanilla syrup and ice. Beautifully layered.','Matcha ceremonial con leche de avena, jarabe de vainilla y hielo. Hermoso y refrescante.','🍵','₡2.200')">
+          <div class="item-stripe"></div>
+          <div class="item-emoji-wrap mint">🍵</div>
+          <div class="item-body">
+            <div>
+              <div class="item-name en-only">Iced Matcha Latte</div>
+              <div class="item-name es-only">Matcha Latte Frío</div>
+              <div class="item-badges"><span class="badge b-veg">Vegano</span><span class="badge b-new">Trending</span></div>
+              <div class="item-desc en-only">Ceremonial matcha with oat milk, vanilla syrup and ice. Beautifully layered.</div>
+              <div class="item-desc es-only">Matcha ceremonial con leche de avena, jarabe de vainilla y hielo.</div>
+            </div>
+            <div class="item-footer">
+              <div class="item-price"><span class="curr">₡</span>2.200</div>
+              <button class="add-btn" onclick="addToCart(event,'Matcha Latte',2200)">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="item-card" onclick="openModal('Strawberry Lemonade','Fresh lemonade with strawberry purée, basil and sparkling water.','Limonada fresca con puré de fresas, albahaca y agua con gas.','🍓','₡1.600')">
+          <div class="item-stripe"></div>
+          <div class="item-emoji-wrap">🍓</div>
+          <div class="item-body">
+            <div>
+              <div class="item-name">Strawberry Lemonade</div>
+              <div class="item-badges"><span class="badge b-veg">Vegano</span></div>
+              <div class="item-desc en-only">Fresh lemonade with strawberry purée, basil and sparkling water.</div>
+              <div class="item-desc es-only">Limonada fresca con puré de fresas, albahaca y agua con gas.</div>
+            </div>
+            <div class="item-footer">
+              <div class="item-price"><span class="curr">₡</span>1.600</div>
+              <button class="add-btn" onclick="addToCart(event,'Strawberry Lemonade',1600)">+</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /content -->
+
+  <!-- INFO FOOTER -->
+  <div class="info-footer">
+    <div class="info-title en-only">📍 Visit Us</div>
+    <div class="info-title es-only">📍 Encuéntranos</div>
+    <div class="info-grid">
+      <div class="info-item">
+        <div class="info-label en-only">Address</div>
+        <div class="info-label es-only">Dirección</div>
+        <div class="info-value">Barrio Escalante, San José</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label en-only">Hours</div>
+        <div class="info-label es-only">Horario</div>
+        <div class="info-value">Lun–Dom<br>8:00am – 7:00pm</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label en-only">Orders</div>
+        <div class="info-label es-only">Pedidos</div>
+        <div class="info-value">+506 6000-0000<br>WhatsApp</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label en-only">Payment</div>
+        <div class="info-label es-only">Pago</div>
+        <div class="info-value">Efectivo · Sinpe<br>Tarjeta</div>
+      </div>
+    </div>
+    <div class="map-wrap">
+      <iframe src="https://maps.google.com/maps?q=9.935290162554685,-84.10372590392429&z=16&output=embed"
+        width="100%" height="200" style="border:0;display:block;" allowfullscreen="" loading="lazy"></iframe>
+      <a href="https://www.google.com/maps?q=9.935290162554685,-84.10372590392429" target="_blank"
+        style="position:absolute;inset:0;z-index:10;display:block;"></a>
+    </div>
+  </div>
+  <div class="powered-by en-only">Menu powered by <span>DigitalMenuPro</span> · $499 setup 🇺🇸</div>
+  <div class="powered-by es-only">Menú creado por <span>DigitalMenuPro</span> · $499 setup 🇺🇸</div>
+
+  <!-- CART -->
+  <div class="cart-bar" id="cartBar">
+    <div style="display:flex;align-items:center;gap:0.6rem;">
+      <div class="cart-count" id="cartCount">0</div>
+      <span class="en-only">My Order</span>
+      <span class="es-only">Mi Pedido</span>
+    </div>
+    <div class="cart-total" id="cartTotal">₡0</div>
+  </div>
+
+  <!-- MODAL -->
+  <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <div class="modal-emoji" id="modalEmoji"></div>
+      <div class="modal-name" id="modalName"></div>
+      <div class="modal-desc" id="modalDesc"></div>
+      <div class="modal-price" id="modalPrice"></div>
+      <button class="modal-btn" id="modalAddBtn">
+        <span class="en-only">Add to Order</span>
+        <span class="es-only">Agregar al Pedido</span>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    function setLang(lang) {
+      document.documentElement.setAttribute('data-lang', lang);
+      document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+      document.getElementById('btn-es').classList.toggle('active', lang === 'es');
+    }
+    var cart = [];
+    function addToCart(e, name, price) {
+      if(e) e.stopPropagation();
+      cart.push({name, price});
+      var total = cart.reduce(function(s,i){return s+i.price;},0);
+      document.getElementById('cartCount').textContent = cart.length;
+      document.getElementById('cartTotal').textContent = '₡' + total.toLocaleString('es-CR');
+      document.getElementById('cartBar').classList.toggle('visible', cart.length > 0);
+      if(e){ var btn=e.target; btn.textContent='✓'; btn.style.background='var(--rose)'; btn.style.color='white'; setTimeout(function(){btn.textContent='+';btn.style.background='';btn.style.color='';},1200); }
+    }
+    function openModal(name, descEn, descEs, emoji, price) {
+      var lang = document.documentElement.getAttribute('data-lang');
+      document.getElementById('modalName').textContent = name;
+      document.getElementById('modalDesc').textContent = lang==='en' ? descEn : descEs;
+      document.getElementById('modalEmoji').textContent = emoji;
+      document.getElementById('modalPrice').textContent = price;
+      var p = parseInt(price.replace(/[₡.,]/g,''));
+      document.getElementById('modalAddBtn').onclick = function(){ addToCart(null,name,p); closeModal(); };
+      document.getElementById('modalOverlay').classList.add('open');
+    }
+    function closeModal(e) {
+      if(!e || e.target===document.getElementById('modalOverlay'))
+        document.getElementById('modalOverlay').classList.remove('open');
+    }
+    function easeInOutCubic(t){return t<0.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;}
+    function smoothScrollTo(targetY,duration){
+      var startY=window.pageYOffset,diff=targetY-startY,startTime=null;
+      function step(ct){if(!startTime)startTime=ct;var p=Math.min((ct-startTime)/duration,1);window.scrollTo(0,startY+diff*easeInOutCubic(p));if(p<1)requestAnimationFrame(step);}
+      requestAnimationFrame(step);
+    }
+    function goToSection(btn,id){
+      document.querySelectorAll('.cat-btn').forEach(function(b){b.classList.remove('active');});
+      btn.classList.add('active');
+      var el=document.getElementById(id);
+      if(el)smoothScrollTo(el.getBoundingClientRect().top+window.pageYOffset-60,800);
+    }
+    function searchMenu(q){
+      var query=q.toLowerCase();
+      document.querySelectorAll('.item-card').forEach(function(card){
+        card.style.display=(card.innerText.toLowerCase().includes(query)||query==='')?'flex':'none';
+      });
+    }
+  </script>
+</body>
+</html>
