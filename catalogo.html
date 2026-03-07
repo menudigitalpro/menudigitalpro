@@ -295,7 +295,40 @@
       </div>
     </div>
 
-    <!-- CARD 8: Thai/Asian Coming Soon -->
+    <!-- CARD 8: Dulcería Available (2 estilos) -->
+    <div class="style-card">
+      <div class="style-preview" style="position:relative; overflow:hidden; height:380px; cursor:default;">
+        <div style="position:absolute;inset:0;">
+          <iframe
+            src="https://menudigitalpro.github.io/menudigitalpro/menu-dulceria-cr.html"
+            id="frame-dulceria-0"
+            style="width:200%;height:200%;transform:scale(0.5);transform-origin:top left;border:none;pointer-events:none;position:absolute;top:0;left:0;opacity:1;transition:opacity 0.8s ease;"
+            loading="lazy" tabindex="-1"></iframe>
+          <iframe
+            src="https://menudigitalpro.github.io/menudigitalpro/menu-dulceria-tech-cr.html"
+            id="frame-dulceria-1"
+            style="width:200%;height:200%;transform:scale(0.5);transform-origin:top left;border:none;pointer-events:none;position:absolute;top:0;left:0;opacity:0;transition:opacity 0.8s ease;"
+            loading="lazy" tabindex="-1"></iframe>
+        </div>
+        <div class="preview-overlay"></div>
+        <!-- Dots -->
+        <div style="position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:10;">
+          <div id="dot-dulceria-0" style="width:6px;height:6px;border-radius:50%;background:white;opacity:1;transition:opacity 0.3s;"></div>
+          <div id="dot-dulceria-1" style="width:6px;height:6px;border-radius:50%;background:white;opacity:0.3;transition:opacity 0.3s;"></div>
+        </div>
+      </div>
+      <div class="style-info">
+        <span class="style-tag tag-available">✓ Disponible · 2 estilos</span>
+        <div class="style-name">Estilo Dulcería</div>
+        <div class="style-desc">Dos variantes: artesanal rosado cálido y tech neón vibrante. Ideal para dulcerías, reposterías, pastelerías y tiendas de postres.</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-top:0.5rem;">
+          <button class="style-btn" onclick="window.open('https://menudigitalpro.github.io/menudigitalpro/menu-dulceria-cr.html','_blank')">🌸 Artesanal →</button>
+          <button class="style-btn" onclick="window.open('https://menudigitalpro.github.io/menudigitalpro/menu-dulceria-tech-cr.html','_blank')">⚡ Tech →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD 9: Thai/Asian Coming Soon -->
     <div class="style-card">
       <div class="style-preview" style="background: linear-gradient(135deg, #1a0f00, #2d1a00);">
         <div class="coming-soon">
@@ -312,7 +345,7 @@
       </div>
     </div>
 
-    <!-- CARD 9: Korean Coming Soon -->
+    <!-- CARD 10: Korean Coming Soon -->
     <div class="style-card">
       <div class="style-preview" style="background: linear-gradient(135deg, #0a0a1a, #15153D);">
         <div class="coming-soon">
@@ -342,6 +375,30 @@
   <div class="cat-footer">
     <p>© 2026 <span>MenúDigitalPro</span> · Hecho en Costa Rica 🇨🇷</p>
   </div>
+
+
+  <script>
+    // Dulcería slider
+    (function() {
+      var frames = [
+        document.getElementById('frame-dulceria-0'),
+        document.getElementById('frame-dulceria-1')
+      ];
+      var dots = [
+        document.getElementById('dot-dulceria-0'),
+        document.getElementById('dot-dulceria-1')
+      ];
+      var current = 0;
+      function next() {
+        frames[current].style.opacity = '0';
+        dots[current].style.opacity = '0.3';
+        current = (current + 1) % frames.length;
+        frames[current].style.opacity = '1';
+        dots[current].style.opacity = '1';
+      }
+      setInterval(next, 2500);
+    })();
+  </script>
 
 </body>
 </html>
