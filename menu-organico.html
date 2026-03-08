@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Raíz Verde — Menú Digital</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --forest:  #1B3A2D;
+      --dark:    #0F2218;
+      --mid:     #234D38;
+      --sage:    #4A7C5F;
+      --lime:    #7FB069;
+      --yellow:  #D4A843;
+      --cream:   #F2EDE4;
+      --warm:    #E8DFD0;
+      --brown:   #8B6F47;
+      --muted:   rgba(242,237,228,0.5);
+      --border:  rgba(127,176,105,0.2);
+      --border2: rgba(255,255,255,0.06);
+    }
+    html { background: var(--dark); }
+    body { font-family: 'DM Sans', sans-serif; background: var(--dark); color: var(--cream); max-width: 520px; margin: 0 auto; min-height: 100vh; }
+    @media(min-width:800px){html{padding:2rem 0;}body{border-radius:14px;overflow-y:auto !important;box-shadow:0 0 80px rgba(27,58,45,0.6);}}
+
+    /* organic noise texture overlay */
+    body::before { content:''; position:fixed; inset:0; pointer-events:none; z-index:0; opacity:0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 200px; }
+
+    /* HEADER */
+    .header { position: relative; overflow: hidden; background: var(--forest); border-bottom: 1px solid var(--border); }
+    .hdr-leaves {
+      position: absolute; inset: 0;
+      background-image: radial-gradient(circle at 10% 20%, rgba(127,176,105,0.08) 0%, transparent 40%),
+                        radial-gradient(circle at 90% 80%, rgba(74,124,95,0.1) 0%, transparent 40%);
+    }
+    .hdr-pattern {
+      position: absolute; inset: 0; opacity: 0.04;
+      background-image: repeating-radial-gradient(circle at 0 0, transparent 0, var(--forest) 8px), repeating-linear-gradient(rgba(127,176,105,0.3), rgba(127,176,105,0.3) 1px, transparent 1px, transparent);
+      background-size: 12px 12px;
+    }
+    .hdr-inner { position: relative; z-index: 1; padding: 2.5rem 1.5rem 2rem; text-align: center; }
+    .hdr-ornament { display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 1rem; }
+    .hdr-ornament span { font-size: 1rem; }
+    .hdr-orn-line { height: 1px; width: 30px; background: linear-gradient(90deg, transparent, var(--lime)); }
+    .hdr-orn-line.r { background: linear-gradient(90deg, var(--lime), transparent); }
+    .hdr-logo { width: 72px; height: 72px; border-radius: 50%; background: var(--mid); border: 2px solid rgba(127,176,105,0.3); margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; box-shadow: 0 0 30px rgba(127,176,105,0.15); }
+    .hdr-name { font-family: 'Lora', serif; font-size: 2.1rem; font-weight: 600; color: var(--cream); letter-spacing: 0.04em; margin-bottom: 0.2rem; }
+    .hdr-name em { font-style: italic; color: var(--lime); }
+    .hdr-sub { font-size: 0.62rem; letter-spacing: 0.28em; text-transform: uppercase; color: rgba(127,176,105,0.7); margin-bottom: 0.5rem; }
+    .hdr-tagline { font-family: 'Lora', serif; font-style: italic; font-size: 0.78rem; color: var(--muted); margin-bottom: 0.9rem; }
+    .hdr-info { display: flex; justify-content: center; gap: 1.4rem; font-size: 0.68rem; color: var(--muted); flex-wrap: wrap; }
+
+    /* BANNER */
+    .banner { background: var(--mid); border-bottom: 1px solid var(--border); padding: 0.55rem 1.5rem; text-align: center; font-size: 0.75rem; letter-spacing: 0.1em; color: var(--lime); font-weight: 500; }
+
+    /* SEASON TAG */
+    .season { margin: 0.8rem 1.2rem 0; display: flex; align-items: center; gap: 0.6rem; }
+    .season-badge { background: rgba(127,176,105,0.12); border: 1px solid var(--border); padding: 0.25rem 0.8rem; font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--lime); border-radius: 100px; }
+    .season-line { flex: 1; height: 1px; background: var(--border); }
+
+    /* CATS */
+    .cats-wrap { position: sticky; top: 0; z-index: 50; background: var(--forest); border-bottom: 1px solid var(--border); }
+    .cats-scroll { display: flex; overflow-x: auto; scrollbar-width: none; }
+    .cats-scroll::-webkit-scrollbar { display: none; }
+    .cat-btn { padding: 0.85rem 1rem; border: none; background: transparent; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.72rem; font-weight: 500; color: rgba(242,237,228,0.3); white-space: nowrap; letter-spacing: 0.1em; text-transform: uppercase; border-bottom: 2px solid transparent; transition: all 0.2s; flex-shrink: 0; }
+    .cat-btn.active { color: var(--lime); border-bottom-color: var(--lime); }
+    .cat-btn:hover { color: var(--cream); }
+
+    /* SEARCH */
+    .search-bar { padding: 0.65rem 1.2rem; background: var(--forest); border-bottom: 1px solid var(--border2); }
+    .search-input { width: 100%; padding: 0.55rem 1rem 0.55rem 2.2rem; border: 1px solid var(--border); background: var(--dark); color: var(--cream); outline: none; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; border-radius: 100px; transition: border-color 0.2s; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='13' height='13' fill='%237FB069' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.099zm-5.242 1.656a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: 0.8rem center; }
+    .search-input:focus { border-color: var(--lime); }
+    .search-input::placeholder { color: rgba(242,237,228,0.2); }
+
+    /* FEATURED */
+    .featured { margin: 0.9rem 1.2rem; background: linear-gradient(135deg, rgba(27,58,45,0.8), rgba(35,77,56,0.6)); border: 1px solid var(--border); border-left: 3px solid var(--lime); padding: 1.1rem; display: flex; align-items: center; gap: 1rem; border-radius: 4px; position: relative; overflow: hidden; }
+    .featured::after { content: '🌿'; position: absolute; right: -5px; bottom: -10px; font-size: 5rem; opacity: 0.08; transform: rotate(20deg); }
+    .feat-emoji { font-size: 2.5rem; flex-shrink: 0; }
+    .feat-info { flex: 1; }
+    .feat-tag { font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--lime); margin-bottom: 0.2rem; font-weight: 500; }
+    .feat-name { font-family: 'Lora', serif; font-size: 1rem; color: var(--cream); font-weight: 600; margin-bottom: 0.15rem; }
+    .feat-desc { font-size: 0.7rem; color: var(--muted); }
+    .feat-price { font-family: 'Lora', serif; font-size: 1.5rem; color: var(--yellow); flex-shrink: 0; font-weight: 600; }
+
+    /* CONTENT */
+    .content { padding: 0 0 6rem; position: relative; z-index: 1; }
+
+    /* SECTION HDR */
+    .sec-hdr { padding: 1.6rem 1.2rem 0.7rem; }
+    .sec-label { font-size: 0.56rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--lime); margin-bottom: 0.3rem; font-weight: 500; }
+    .sec-name { font-family: 'Lora', serif; font-size: 1.3rem; font-weight: 600; color: var(--cream); margin-bottom: 0.15rem; }
+    .sec-divider { display: flex; align-items: center; gap: 0.8rem; margin-top: 0.5rem; }
+    .sec-divider::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--border), transparent); }
+    .sec-count { font-size: 0.6rem; letter-spacing: 0.1em; color: var(--muted); }
+
+    /* ITEMS */
+    .items-list { padding: 0.2rem 1.2rem; display: flex; flex-direction: column; gap: 0.6rem; }
+    .item-card { background: var(--forest); border: 1px solid var(--border2); display: flex; align-items: stretch; cursor: pointer; overflow: hidden; transition: border-color 0.25s, transform 0.2s; border-radius: 6px; position: relative; }
+    .item-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: linear-gradient(180deg, var(--lime), var(--sage)); transform: scaleY(0); transform-origin: bottom; transition: transform 0.3s; }
+    .item-card:hover { border-color: var(--border); transform: translateX(3px); }
+    .item-card:hover::before { transform: scaleY(1); }
+    .item-emoji { width: 80px; min-height: 90px; flex-shrink: 0; background: var(--mid); display: flex; align-items: center; justify-content: center; font-size: 2.2rem; border-right: 1px solid var(--border2); }
+    .item-body { padding: 0.85rem 0.9rem; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+    .item-name { font-family: 'Lora', serif; font-size: 0.95rem; font-weight: 600; color: var(--cream); margin-bottom: 0.12rem; }
+    .item-badges { display: flex; gap: 0.3rem; flex-wrap: wrap; margin-bottom: 0.3rem; }
+    .badge { font-size: 0.54rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.1rem 0.5rem; border: 1px solid; border-radius: 100px; font-weight: 500; }
+    .b-org  { color: var(--lime); border-color: rgba(127,176,105,0.3); background: rgba(127,176,105,0.08); }
+    .b-raw  { color: #A5C882; border-color: rgba(165,200,130,0.3); background: rgba(165,200,130,0.07); }
+    .b-new  { color: var(--yellow); border-color: rgba(212,168,67,0.3); background: rgba(212,168,67,0.07); }
+    .b-pop  { color: var(--muted); border-color: var(--border2); }
+    .b-veg  { color: #81C784; border-color: rgba(129,199,132,0.3); background: rgba(129,199,132,0.07); }
+    .item-desc { font-size: 0.72rem; color: var(--muted); line-height: 1.6; margin-bottom: 0.5rem; font-weight: 300; }
+    .item-foot { display: flex; align-items: center; justify-content: space-between; }
+    .item-price { font-family: 'Lora', serif; font-size: 1.05rem; color: var(--yellow); font-weight: 600; }
+    .add-btn { width: 28px; height: 28px; background: transparent; border: 1px solid var(--border); color: var(--lime); font-size: 1.1rem; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; border-radius: 50%; }
+    .add-btn:hover { background: var(--lime); color: var(--dark); border-color: var(--lime); }
+
+    /* DIVIDER */
+    .divider { display: flex; align-items: center; gap: 1rem; padding: 0.2rem 1.2rem; margin: 0.5rem 0; }
+    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border2); }
+    .divider span { color: var(--lime); font-size: 0.7rem; }
+
+    /* CART */
+    .cart-bar { position: fixed; bottom: 1.2rem; left: 50%; transform: translateX(-50%); background: var(--sage); color: white; padding: 0.85rem 1.8rem; display: flex; align-items: center; gap: 1rem; box-shadow: 0 8px 30px rgba(15,34,24,0.5); cursor: pointer; z-index: 100; min-width: 260px; justify-content: space-between; opacity: 0; pointer-events: none; transition: opacity 0.3s; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; letter-spacing: 0.1em; text-transform: uppercase; border-radius: 100px; font-weight: 500; }
+    .cart-bar.visible { opacity: 1; pointer-events: all; }
+    .cart-count { background: white; color: var(--forest); width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; }
+    .cart-total { font-family: 'Lora', serif; font-size: 1rem; font-weight: 600; }
+
+    /* FOOTER */
+    .info-footer { background: var(--forest); padding: 2rem 1.5rem; border-top: 1px solid var(--border); position: relative; z-index: 1; }
+    .info-ornament { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1.2rem; }
+    .info-ornament::before, .info-ornament::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .info-ornament span { font-family: 'Lora', serif; font-style: italic; font-size: 0.8rem; color: var(--lime); }
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+    .info-item { padding: 0.8rem; border: 1px solid var(--border2); background: var(--mid); border-radius: 6px; }
+    .info-label { font-size: 0.55rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--lime); margin-bottom: 0.3rem; font-weight: 500; }
+    .info-value { font-size: 0.78rem; color: rgba(242,237,228,0.5); line-height: 1.55; font-weight: 300; }
+    .powered-by { text-align: center; padding: 0.8rem; font-size: 0.65rem; color: rgba(242,237,228,0.2); background: var(--dark); border-top: 1px solid var(--border2); position: relative; z-index: 1; }
+    .powered-by span { color: var(--lime); }
+
+    /* MODAL */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 200; display: flex; align-items: flex-end; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal { background: var(--forest); width: 100%; border-top: 2px solid var(--lime); padding: 1.8rem 1.5rem 1.5rem; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.32,0.72,0,1); max-height: 82vh; overflow-y: auto; position: relative; border-radius: 12px 12px 0 0; }
+    .modal-overlay.open .modal { transform: translateY(0); }
+    .modal-handle { width: 32px; height: 3px; background: var(--border); margin: 0 auto 1.2rem; border-radius: 2px; }
+    .modal-emoji { font-size: 3rem; text-align: center; margin-bottom: 0.8rem; }
+    .modal-tag { font-size: 0.58rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--lime); text-align: center; margin-bottom: 0.5rem; }
+    .modal-name { font-family: 'Lora', serif; font-size: 1.5rem; font-weight: 600; text-align: center; color: var(--cream); margin-bottom: 0.6rem; }
+    .modal-desc { font-size: 0.82rem; color: var(--muted); text-align: center; line-height: 1.75; margin-bottom: 1.2rem; font-weight: 300; }
+    .modal-price { font-family: 'Lora', serif; font-size: 1.8rem; color: var(--yellow); text-align: center; margin-bottom: 1.5rem; font-weight: 600; }
+    .modal-btn { width: 100%; background: var(--sage); color: white; border: none; padding: 1rem; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; transition: background 0.2s; border-radius: 6px; font-weight: 600; }
+    .modal-btn:hover { background: var(--lime); color: var(--dark); }
+    .modal-close { position: absolute; top: 1.2rem; right: 1.2rem; background: transparent; border: 1px solid var(--border2); color: rgba(242,237,228,0.4); width: 28px; height: 28px; cursor: pointer; font-size: 0.82rem; border-radius: 50%; transition: all 0.2s; }
+    .modal-close:hover { border-color: var(--lime); color: var(--cream); }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="hdr-leaves"></div><div class="hdr-pattern"></div>
+    <div class="hdr-inner">
+      <div class="hdr-ornament"><div class="hdr-orn-line"></div><span>🌿</span><div class="hdr-orn-line r"></div></div>
+      <div class="hdr-logo">🥗</div>
+      <div class="hdr-name">Raíz <em>Verde</em></div>
+      <div class="hdr-sub">Cocina Orgánica · Saludable · Natural</div>
+      <div class="hdr-tagline">"Del huerto a tu plato — sin compromisos"</div>
+      <div class="hdr-info"><span>⏰ 7am–8pm</span><span>📍 Escazú, SJ</span><span>⭐ 4.9</span></div>
+    </div>
+  </header>
+
+  <div class="banner">🌱 Todo nuestro menú usa ingredientes 100% orgánicos y de productores locales</div>
+
+  <div class="cats-wrap">
+    <div class="cats-scroll">
+      <button class="cat-btn active" onclick="goSec(this,'desayunos')">🌅 Desayunos</button>
+      <button class="cat-btn" onclick="goSec(this,'ensaladas')">🥗 Ensaladas</button>
+      <button class="cat-btn" onclick="goSec(this,'bowls')">🥣 Bowls</button>
+      <button class="cat-btn" onclick="goSec(this,'platos')">🍽 Platos</button>
+      <button class="cat-btn" onclick="goSec(this,'jugos')">🥤 Jugos</button>
+      <button class="cat-btn" onclick="goSec(this,'postres')">🍓 Postres</button>
+    </div>
+  </div>
+  <div class="search-bar"><input class="search-input" type="text" placeholder="Buscar en el menú..." oninput="srch(this.value)"/></div>
+
+  <div class="featured">
+    <div class="feat-emoji">🥑</div>
+    <div class="feat-info">
+      <div class="feat-tag">✦ Plato estrella</div>
+      <div class="feat-name">Buddha Bowl Primavera</div>
+      <div class="feat-desc">Quinoa, aguacate, betabel y tahini de sésamo negro</div>
+    </div>
+    <div class="feat-price">₡6.500</div>
+  </div>
+
+  <div class="content">
+    <div id="desayunos">
+      <div class="sec-hdr">
+        <div class="sec-label">✦ Para empezar el día</div>
+        <div class="sec-name">Desayunos</div>
+        <div class="sec-divider"><div class="sec-count">4 opciones</div></div>
+      </div>
+      <div class="items-list">
+        <div class="item-card" onclick="openM('Tostadas de Aguacate Orgánico','Pan de masa madre integral, aguacate Hass orgánico, tomate cherry, microgreens, aceite de oliva extra virgen y fleur de sel.','🥑','₡4.800')">
+          <div class="item-emoji">🥑</div><div class="item-body"><div><div class="item-name">Tostadas de Aguacate</div><div class="item-badges"><span class="badge b-veg">🌿 Vegano</span><span class="badge b-pop">Popular</span></div><div class="item-desc">Masa madre integral, aguacate Hass, tomate cherry, microgreens y oliva.</div></div><div class="item-foot"><div class="item-price">₡4.800</div><button class="add-btn" onclick="addC(event,'Tostadas Aguacate',4800)">+</button></div></div>
+        </div>
+        <div class="item-card" onclick="openM('Bowl de Granola Artesanal','Granola hecha en casa con avena, almendras, semillas de chía, coco rallado, frutos rojos frescos y yogur de coco.','🥣','₡4.200')">
+          <div class="item-emoji">🥣</div><div class="item-body"><div><div class="item-name">Bowl de Granola Artesanal</div><div class="item-badges"><span class="badge b-veg">🌿 Vegano</span><span class="badge b-org">Orgánico</span></div><div class="item-desc">Granola casera, chía, coco, frutos rojos y yogur de coco.</div></div><div class="item-foot"><div class="item-price">₡4.200</div><button class="add-btn" onclick="addC(event,'Granola Bowl',4200)">+</button></div></div>
+        </div>
+        <div class="item-card" onclick="openM('Huevos de Finca Revueltos','Dos huevos de gallinas de pastoreo con espinaca salteada, champiñones portobello, queso de cabra y pan de semillas.','🍳','₡5.200')">
+          <div class="item-emoji">🍳</div><div class="item-body"><div><div class="item-name">Huevos de Finca Revueltos</div><div class="item-badges"><span class="badge b-org">Finca local</span></div><div class="item-desc">Huevos de pastoreo, espinaca, portobello, queso de cabra y pan de semillas.</div></div><div class="item-foot"><div class="item-price">₡5.200</div><button class="add-btn" onclick="addC(event,'Huevos Finca',5200)">+</button></div></div>
+        </div>
+        <div class="item-card" onclick="openM('Panqueques de Espelta','Panqueques de harina de espelta integral, compota de frutos rojos sin azúcar, plátano, maple puro y crema de anacardo.','🥞','₡4.500')">
+          <div class="item-emoji">🥞</div><div class="item-body"><div><div class="item-name">Panqueques de Espelta</div><div class="item-badges"><span class="badge b-veg">🌿 Vegano</span><span class="badge b-new">Nuevo</span></div><div class="item-desc">Espelta integral, compota sin azúcar, maple puro y crema de anacardo.</div></div><div class="item-foot"><div class="item-price">₡4.500</div><button class="add-btn" onclick="addC(event,'Panqueques',4500)">+</button></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"><span>🌿</span></div>
+
+    <div id="ensaladas">
+      <div class="sec-hdr">
+        <div class="sec-label">✦ Del huerto directo</div>
+        <div class="sec-name">Ensaladas</div>
+        <div class="sec-divider"><div class="sec-count">3 opciones</div></div>
+      </div>
+      <div class="items-list">
+        <div class="item-card" onclick="openM('Ensalada Primavera del Huerto','Mix de lechugas orgánicas, tomate cherry, zanahoria rallada, pepino, semillas de girasol, aderezo de limón y hierbas.','🥗','₡4.500')">
+          <div class="item-emoji">🥗</div><div class="item-body"><div><div class="item-name">Primavera del Huerto</div><div class="item-badges"><span class="badge b-veg">🌿 Vegana</span><span class="badge b-org">Orgánica</span></div><div class="item-desc">Lechugas orgánicas, tomate cherry, zanahoria, pepino y aderezo de limón.</div></div><div class="item-foot"><div class="item-price">₡4.500</div><button class="add-btn" onclick="addC(event,'Ensalada Primavera',4500)">+</button></div></div>
+        </div>
+        <div class="item-card" onclick="openM('Ensalada de Quinoa y Kale','Quinoa blanca, kale masajeado, aguacate, garbanzos crujientes, nueces, cranberries y aderezo tahini.','🥬','₡5.500')">
+          <div class="item-emoji">🥬</div><div class="item-body"><div><div class="item-name">Quinoa y Kale</div><div class="item-badges"><span class="badge b-veg">🌿 Vegana</span><span class="badge b-pop">Popular</span></div><div class="item-desc">Quinoa, kale, aguacate, garbanzos crujientes y aderezo tahini.</div></div><div class="item-foot"><div class="item-price">₡5.500</div><button class="add-btn" onclick="addC(event,'Ensalada Quinoa',5500)">+</button></div></div>
+        </div>
+        <div class="item-card" onclick="openM('Ensalada César de la Huerta','Versión vegana: lechuga romana orgánica, crutones de masa madre, parmesano vegano y aderezo César de cajú.','🌱','₡4.800')">
+          <div class="item-emoji">🌱</div><div class="item-body"><div><div class="item-name">César de la Huerta</div><div class="item-badges"><span class="badge b-veg">🌿 Vegana</span></div><div class="item-desc">Romana orgánica, crutones masa madre, parmesano vegano y aderezo cajú.</div></div><div class="item-foot"><div class="item-price">₡4.800</div><button class="add-btn" onclick="addC(event,'César Huerta',4800)">+</button></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"><span>🌿</span></div>
+
+    <div id="bowls">
+      <div class="sec-hdr">
+        <div class="sec-label">✦ Nutre tu cuerpo</div>
+        <div class="sec-name">Power Bowls</div>
+        <div class="sec-divider"><div class="sec-count">3 opciones</div></div>
+      </div>
+      <div class="items-list">
+        <div class="item-card" onclick="openM('Buddha Bowl Primavera','Quinoa tricolor, aguacate, betabel asado, zanahoria encurtida, edamame, pepino, tahini de sésamo negro y semillas.','🥑','₡6.500')">
+          <div class="item-emoji">🥑</div><div class="item-body"><div><div class="item-name">Buddha Bowl Primavera</div><div class="item-badges"><span class="badge b-veg">🌿 Vegano</span><span class="badge b-new">Estrella</span></div><div class="item-desc">Quinoa tricolor, aguacate, betabel, edamame, tahini negro y semillas.</div></div><div class="item-foot"><div class="item-price">₡6.500</div><button class="add-btn" onclick="addC(event,'Buddha Bowl',6500)">+</button></div></div>
+        </div>
+        <div class="item-card" onclick="openM('Green Detox Bowl','Arroz jazmín, brócoli al vapor, espinaca, aguacate, pepino, cebollín, aderezo de miso y jengibre.','🥦','₡5.800')">
+          <div class="item-emoji">🥦</div><div class="item-body"><div><div class="item-name">Green Detox Bowl</div><div class="item-badges"><span class="badge b-veg">🌿 Vegano</span><span class="badge b-raw">Detox</span></div><div class="item-desc">Arroz jazmín, brócoli, espinaca, aguacate y aderezo de miso y jengibre.</div></div><div class="item-foot"><div class="item-price">₡5.800</div><button class="add-btn" onclick="addC(event,'Green Detox',5800)">+</button></div></div>
+        </div>
+        <div class="item-card" onclick="openM('Acaí Energía Bowl','Acaí, plátano congelado, leche de almendra, granola artesanal, mango, fresas, coco tostado y miel cruda.','🫐','₡5.200')">
+          <div class="item-emoji">🫐</div><div class="item-body"><div><div class="item-name">Acaí Energía Bowl</div><div class="item-badges"><span class="badge b-veg">🌿 Vegano</span><span class="badge b-pop">Popular</span></div><div class="item-desc">Acaí, plátano, granola, mango, fresas y miel cruda.</div></div><div class="item-foot"><div class="item-price">₡5.200</div><button class="add-btn" onclick="addC(event,'Acai Bowl',5200)">+</button></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"><span>🌿</span></div>
+
+    <div id="platos">
+      <div class="sec-hdr">
+        <div class="sec-label">✦ Platos principales</div>
+        <div class="sec-name">Platos del Día</div>
+        <div class="sec-divider"><div class="sec-count">3 opciones</div></div>
+      </div>
+      <div class="items-list">
+        <div class="item-card" onclick="openM('Curry Verde de Vegetales','Curry tailandés verde con leche de coco, vegetales de temporada, tofu orgánico, arroz jazmín y cilantro fresco.','🍛','₡6.800')">
+          <div class="item-emoji">🍛</div><div class="item-body"><div><div class="item-name">Curry Verde de Vegetales</div><div class="item-badges"><span class="badge b-veg">🌿 Vegano</span><span class="badge b-pop">Favorito</span></div><div class="item-desc">Curry tailandés, leche de coco, vegetales de temporada y tofu orgánico.</div></div><div class="item-foot"><div class="item-price">₡6.800</div><button class="add-btn" onclick="addC(event,'Curry Verde',6800)">+</button></div></div>
+        </div>
+        <div class="item-card" onclick="openM('Salmón del Pacífico al Limón','Salmón salvaje del Pacífico, costra de hierbas, quinoa al pesto de espinaca y ensalada tibia de betabeles.','🐟','₡8.500')">
+          <div class="item-emoji">🐟</div><div class="item-body"><div><div class="item-name">Salmón del Pacífico</div><div class="item-badges"><span class="badge b-org">Wild Caught</span><span class="badge b-new">Premium</span></div><div class="item-desc">Salmón salvaje, costra de hierbas, quinoa al pesto y betabel tibio.</div></div><div class="item-foot"><div class="item-price">₡8.500</div><button class="add-btn" onclick="addC(event,'Salmón',8500)">+</button></div></div>
+        </div>
+        <div class="item-card" onclick="openM('Tacos de Jackfruit Adobado (3 pzs)','Jackfruit deshebrada adobada al horno, tortillas de maíz azul, guacamole casero, pico de gallo y crema de anacardo.','🌮','₡5.500')">
+          <div class="item-emoji">🌮</div><div class="item-body"><div><div class="item-name">Tacos de Jackfruit (3 pzs)</div><div class="item-badges"><span class="badge b-veg">🌿 Vegano</span></div><div class="item-desc">Jackfruit adobada, tortilla de maíz azul, guacamole y crema de anacardo.</div></div><div class="item-foot"><div class="item-price">₡5.500</div><button class="add-btn" onclick="addC(event,'Tacos Jackfruit',5500)">+</button></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"><span>🌿</span></div>
+
+    <div id="jugos">
+      <div class="sec-hdr">
+        <div class="sec-label">✦ Cold-pressed · Sin azúcar</div>
+        <div class="sec-name">Jugos & Bebidas</div>
+        <div class="sec-divider"><div class="sec-count">4 opciones</div></div>
+      </div>
+      <div class="items-list">
+        <div class="item-card" onclick="openM('Green Power Juice','Jugo prensado en frío de manzana verde, apio, pepino, jengibre y limón. 350ml. Sin azúcar añadida.','🥒','₡2.800')">
+          <div class="item-emoji">🥒</div><div class="item-body"><div><div class="item-name">Green Power Juice</div><div class="item-badges"><span class="badge b-veg">🌿 Orgánico</span><span class="badge b-raw">Cold-pressed</span></div><div class="item-desc">Manzana verde, apio, pepino, jengibre y limón. 350ml.</div></div><div class="item-foot"><div class="item-price">₡2.800</div><button class="add-btn" onclick="addC(event,'Green Juice',2800)">+</button></div></div>
+        </div>
+        <div class="item-card" onclick="openM('Golden Milk Latte','Leche de almendra, cúrcuma orgánica, jengibre, pimienta negra, canela y miel cruda de abejas locales. Caliente.','✨','₡2.500')">
+          <div class="item-emoji">✨</div><div class="item-body"><div><div class="item-name">Golden Milk Latte</div><div class="item-badges"><span class="badge b-veg">🌿 Vegano</span><span class="badge b-pop">Viral</span></div><div class="item-desc">Leche de almendra, cúrcuma, jengibre, canela y miel cruda local.</div></div><div class="item-foot"><div class="item-price">₡2.500</div><button class="add-btn" onclick="addC(event,'Golden Milk',2500)">+</button></div></div>
+        </div>
+        <div class="item-card" onclick="openM('Kombucha de la Casa','Kombucha fermentada artesanalmente en casa, sabor jengibre-limón o hibisco-mora. 300ml.','🫙','₡2.200')">
+          <div class="item-emoji">🫙</div><div class="item-body"><div><div class="item-name">Kombucha Artesanal</div><div class="item-badges"><span class="badge b-org">Fermentada</span></div><div class="item-desc">Kombucha casera: jengibre-limón o hibisco-mora. 300ml.</div></div><div class="item-foot"><div class="item-price">₡2.200</div><button class="add-btn" onclick="addC(event,'Kombucha',2200)">+</button></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"><span>🌿</span></div>
+
+    <div id="postres">
+      <div class="sec-hdr">
+        <div class="sec-label">✦ Dulce sin culpa</div>
+        <div class="sec-name">Postres Raw</div>
+        <div class="sec-divider"><div class="sec-count">3 opciones</div></div>
+      </div>
+      <div class="items-list" style="margin-bottom:5rem;">
+        <div class="item-card" onclick="openM('Tarta Raw de Limón','Base de dátiles, almendras y coco. Relleno cremoso de anacardo, limón y aceite de coco. Sin horno, sin gluten, sin azúcar.','🍋','₡3.800')">
+          <div class="item-emoji">🍋</div><div class="item-body"><div><div class="item-name">Tarta Raw de Limón</div><div class="item-badges"><span class="badge b-raw">Raw</span><span class="badge b-veg">🌿 Vegana</span><span class="badge b-new">Estrella</span></div><div class="item-desc">Base de dátiles y almendras, relleno de anacardo y limón. Sin horno.</div></div><div class="item-foot"><div class="item-price">₡3.800</div><button class="add-btn" onclick="addC(event,'Tarta Raw',3800)">+</button></div></div>
+        </div>
+        <div class="item-card" onclick="openM('Mousse de Chocolate Oscuro','Mousse cremosa de cacao orgánico 80%, aguacate, leche de coco y maple. Servida con frutos rojos y cacao en polvo.','🍫','₡3.500')">
+          <div class="item-emoji">🍫</div><div class="item-body"><div><div class="item-name">Mousse de Cacao Oscuro</div><div class="item-badges"><span class="badge b-veg">🌿 Vegana</span><span class="badge b-pop">Favorita</span></div><div class="item-desc">Cacao orgánico 80%, aguacate, leche de coco y maple.</div></div><div class="item-foot"><div class="item-price">₡3.500</div><button class="add-btn" onclick="addC(event,'Mousse Cacao',3500)">+</button></div></div>
+        </div>
+        <div class="item-card" onclick="openM('Nicecream de Mango y Cúrcuma','Helado sin lácteos hecho de plátano congelado, mango, cúrcuma y leche de coco. Cubierto de granola y coco.','🍦','₡3.200')">
+          <div class="item-emoji">🍦</div><div class="item-body"><div><div class="item-name">Nicecream Mango & Cúrcuma</div><div class="item-badges"><span class="badge b-veg">🌿 Vegano</span></div><div class="item-desc">Plátano congelado, mango, cúrcuma y coco. Con granola.</div></div><div class="item-foot"><div class="item-price">₡3.200</div><button class="add-btn" onclick="addC(event,'Nicecream',3200)">+</button></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-footer">
+    <div class="info-ornament"><span>Encuéntranos</span></div>
+    <div class="info-grid">
+      <div class="info-item"><div class="info-label">Dirección</div><div class="info-value">Escazú, San José</div></div>
+      <div class="info-item"><div class="info-label">Horario</div><div class="info-value">Lun–Sáb<br>7:00am – 8:00pm</div></div>
+      <div class="info-item"><div class="info-label">WhatsApp</div><div class="info-value">+506 0000-0000</div></div>
+      <div class="info-item"><div class="info-label">Pago</div><div class="info-value">Efectivo · Sinpe · Tarjeta</div></div>
+    </div>
+  </div>
+  <div class="powered-by">Menú creado por <span>MenúDigitalPro</span> · ₡20.000 🇨🇷</div>
+
+  <div class="cart-bar" id="cartBar">
+    <div style="display:flex;align-items:center;gap:0.6rem;"><div class="cart-count" id="cartCount">0</div><span>Ver pedido</span></div>
+    <div class="cart-total" id="cartTotal">₡0</div>
+  </div>
+  <div class="modal-overlay" id="modalOverlay" onclick="closeM(event)">
+    <div class="modal">
+      <div class="modal-handle"></div><button class="modal-close" onclick="closeM()">✕</button>
+      <div class="modal-emoji" id="mE"></div><div class="modal-tag">✦ Raíz Verde ✦</div>
+      <div class="modal-name" id="mN"></div><div class="modal-desc" id="mD"></div>
+      <div class="modal-price" id="mP"></div>
+      <button class="modal-btn" id="mB">Agregar al Pedido</button>
+    </div>
+  </div>
+  <script>
+    var cart=[];
+    function addC(e,n,p){if(e)e.stopPropagation();cart.push({n,p});var t=cart.reduce(function(s,i){return s+i.p;},0);document.getElementById('cartCount').textContent=cart.length;document.getElementById('cartTotal').textContent='₡'+t.toLocaleString('es-CR');document.getElementById('cartBar').classList.toggle('visible',cart.length>0);if(e){var b=e.target;b.textContent='✓';b.style.background='var(--lime)';b.style.color='var(--dark)';setTimeout(function(){b.textContent='+';b.style.background='';b.style.color='';},1200);}}
+    function openM(name,desc,emoji,price){document.getElementById('mN').textContent=name;document.getElementById('mD').textContent=desc;document.getElementById('mE').textContent=emoji;document.getElementById('mP').textContent=price;var p=parseInt(price.replace(/[₡.,]/g,''));document.getElementById('mB').onclick=function(){addC(null,name,p);closeM();};document.getElementById('modalOverlay').classList.add('open');}
+    function closeM(e){if(!e||e.target===document.getElementById('modalOverlay'))document.getElementById('modalOverlay').classList.remove('open');}
+    function eio(t){return t<0.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;}
+    function sto(y,d){var s=window.pageYOffset,df=y-s,st=null;function step(ct){if(!st)st=ct;var p=Math.min((ct-st)/d,1);window.scrollTo(0,s+df*eio(p));if(p<1)requestAnimationFrame(step);}requestAnimationFrame(step);}
+    function goSec(btn,id){document.querySelectorAll('.cat-btn').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');var el=document.getElementById(id);if(el)sto(el.getBoundingClientRect().top+window.pageYOffset-60,800);}
+    function srch(q){var qr=q.toLowerCase();document.querySelectorAll('.item-card').forEach(function(c){c.style.display=(c.innerText.toLowerCase().includes(qr)||q==='')?'flex':'none';});}
+  </script>
+</body>
+</html>
