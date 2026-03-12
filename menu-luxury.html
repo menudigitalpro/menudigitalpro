@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+<title>Noir — Carta</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Jost:wght@200;300;400&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --black:#080808;
+  --gold:#C9A84C;
+  --gold2:#E8C97A;
+  --cream:#F5EDD8;
+  --white:#FFFFFF;
+  --gray:#6B6B6B;
+}
+html,body{
+  height:100%;width:100%;
+  overflow:hidden;
+  background:var(--black);
+  font-family:'Jost',sans-serif;
+  -webkit-tap-highlight-color:transparent;
+}
+
+/* ══ GRAIN OVERLAY ══ */
+body::after{
+  content:'';
+  position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  opacity:0.035;
+  pointer-events:none;
+  z-index:9999;
+}
+
+/* ══ INTRO SCREEN ══ */
+#intro{
+  position:fixed;inset:0;
+  background:var(--black);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  z-index:500;
+  transition:opacity 0.8s ease, visibility 0.8s;
+}
+#intro.out{opacity:0;visibility:hidden;pointer-events:none;}
+.intro-line{
+  width:60px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  margin-bottom:2.5rem;
+  animation:lineGrow 1s ease forwards;
+}
+@keyframes lineGrow{from{width:0;opacity:0}to{width:60px;opacity:1}}
+.intro-name{
+  font-family:'Playfair Display',serif;
+  font-size:3.5rem;font-weight:900;
+  color:var(--white);letter-spacing:0.08em;
+  text-transform:uppercase;
+  animation:fadeUp 1s 0.3s ease both;
+}
+.intro-sub{
+  font-size:0.65rem;font-weight:200;
+  letter-spacing:0.4em;text-transform:uppercase;
+  color:var(--gold);margin-top:0.5rem;
+  animation:fadeUp 1s 0.5s ease both;
+}
+.intro-btn{
+  margin-top:3rem;
+  border:1px solid rgba(201,168,76,0.4);
+  background:none;color:var(--gold);
+  padding:0.9rem 2.5rem;
+  font-family:'Jost',sans-serif;font-size:0.65rem;
+  font-weight:300;letter-spacing:0.35em;text-transform:uppercase;
+  cursor:pointer;transition:all 0.3s;
+  animation:fadeUp 1s 0.7s ease both;
+}
+.intro-btn:hover{background:var(--gold);color:var(--black);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* ══ MAIN WRAPPER ══ */
+#app{
+  position:fixed;inset:0;
+  overflow-y:scroll;
+  scroll-snap-type:y mandatory;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+}
+#app::-webkit-scrollbar{display:none;}
+
+/* ══ PAGES ══ */
+.page{
+  width:100%;height:100vh;
+  scroll-snap-align:start;
+  scroll-snap-stop:always;
+  position:relative;
+  overflow:hidden;
+  display:flex;flex-direction:column;
+}
+
+/* ══ COVER PAGE ══ */
+#cover{
+  background:var(--black);
+  align-items:center;justify-content:center;
+}
+.cover-bg{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse at 30% 60%, rgba(201,168,76,0.08) 0%, transparent 65%),
+             radial-gradient(ellipse at 75% 20%, rgba(201,168,76,0.05) 0%, transparent 55%);
+}
+.cover-deco-top{
+  position:absolute;top:2.5rem;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:0.5rem;
+}
+.cover-est{
+  font-size:0.55rem;letter-spacing:0.4em;text-transform:uppercase;
+  font-weight:200;color:var(--gold);
+}
+.cover-line-h{width:1px;height:40px;background:linear-gradient(var(--gold),transparent);}
+.cover-inner{position:relative;z-index:1;text-align:center;padding:2rem;}
+.cover-roman{
+  font-family:'Playfair Display',serif;
+  font-size:0.7rem;font-weight:400;
+  letter-spacing:0.5em;color:var(--gold);
+  text-transform:uppercase;margin-bottom:1.5rem;
+}
+.cover-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(3.5rem,16vw,5.5rem);
+  font-weight:900;line-height:0.9;
+  color:var(--white);letter-spacing:-0.02em;
+  margin-bottom:0.3rem;
+}
+.cover-title em{
+  display:block;font-style:italic;
+  color:var(--gold);font-weight:400;
+  font-size:0.6em;letter-spacing:0.05em;
+  margin-top:0.5rem;
+}
+.cover-tagline{
+  font-size:0.62rem;font-weight:200;
+  letter-spacing:0.3em;text-transform:uppercase;
+  color:rgba(255,255,255,0.4);margin-top:2rem;
+}
+.cover-ornament{
+  display:flex;align-items:center;gap:1rem;
+  margin:1.5rem auto;justify-content:center;
+}
+.orn-line{flex:1;max-width:60px;height:1px;background:linear-gradient(90deg,transparent,var(--gold));}
+.orn-line.r{background:linear-gradient(90deg,var(--gold),transparent);}
+.orn-diamond{
+  width:6px;height:6px;
+  background:var(--gold);
+  transform:rotate(45deg);
+}
+.cover-scroll-hint{
+  position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:0.5rem;
+}
+.cover-scroll-text{
+  font-size:0.5rem;letter-spacing:0.4em;text-transform:uppercase;
+  color:rgba(255,255,255,0.25);font-weight:200;
+}
+.scroll-arrow{
+  width:1px;height:32px;
+  background:linear-gradient(var(--gold),transparent);
+  animation:pulse 2s infinite;
+}
+@keyframes pulse{0%,100%{opacity:0.3;transform:scaleY(0.8)}50%{opacity:1;transform:scaleY(1)}}
+
+/* ══ CATEGORY DIVIDER PAGE ══ */
+.cat-page{
+  background:var(--black);
+  align-items:center;justify-content:center;
+}
+.cat-page-inner{text-align:center;padding:2rem;position:relative;z-index:1;}
+.cat-num{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(5rem,25vw,8rem);
+  font-weight:900;line-height:1;
+  color:rgba(201,168,76,0.1);
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  user-select:none;pointer-events:none;
+  letter-spacing:-0.04em;
+}
+.cat-label{
+  font-size:0.58rem;letter-spacing:0.45em;
+  text-transform:uppercase;font-weight:200;
+  color:var(--gold);margin-bottom:1.2rem;
+}
+.cat-name{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(2.5rem,12vw,4rem);
+  font-weight:700;color:var(--white);
+  line-height:1.05;
+}
+.cat-count{
+  font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;
+  color:rgba(255,255,255,0.25);margin-top:1.2rem;font-weight:200;
+}
+.cat-line-v{
+  width:1px;height:50px;
+  background:linear-gradient(var(--gold),transparent);
+  margin:1.5rem auto;
+}
+
+/* ══ DISH PAGE ══ */
+.dish-page{background:var(--black);}
+
+.dish-photo{
+  position:absolute;inset:0;
+  background-size:cover;background-position:center;
+  transition:transform 0.6s ease;
+}
+.dish-photo img{width:100%;height:100%;object-fit:cover;display:block;}
+.dish-photo-placeholder{
+  width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:6rem;
+  background:linear-gradient(135deg,#111 0%,#1a1a1a 100%);
+}
+
+/* gradient from bottom */
+.dish-vignette{
+  position:absolute;inset:0;
+  background:
+    linear-gradient(to top, rgba(8,8,8,0.98) 0%, rgba(8,8,8,0.7) 35%, rgba(8,8,8,0.1) 60%, rgba(8,8,8,0.3) 100%);
+}
+/* top fade */
+.dish-vignette::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to bottom, rgba(8,8,8,0.6) 0%, transparent 30%);
+}
+
+.dish-top{
+  position:absolute;top:0;left:0;right:0;
+  padding:2rem 1.8rem 0;
+  display:flex;justify-content:space-between;align-items:flex-start;
+  z-index:2;
+}
+.dish-index{
+  font-family:'Playfair Display',serif;
+  font-size:0.65rem;font-weight:400;
+  letter-spacing:0.3em;color:rgba(255,255,255,0.35);
+  font-style:italic;
+}
+.dish-cat-label{
+  font-size:0.5rem;letter-spacing:0.3em;
+  text-transform:uppercase;font-weight:200;
+  color:var(--gold);text-align:right;
+}
+
+.dish-bottom{
+  position:absolute;bottom:0;left:0;right:0;
+  padding:0 1.8rem 2.5rem;
+  z-index:2;
+}
+.dish-ornament{
+  display:flex;align-items:center;gap:0.8rem;
+  margin-bottom:1.2rem;
+}
+.dish-orn-line{height:1px;flex:1;max-width:40px;background:linear-gradient(90deg,var(--gold),transparent);}
+.dish-badge{
+  font-size:0.5rem;letter-spacing:0.25em;
+  text-transform:uppercase;font-weight:300;
+  color:var(--gold);
+}
+
+.dish-name{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(1.8rem,8vw,2.6rem);
+  font-weight:700;color:var(--white);
+  line-height:1.05;margin-bottom:0.7rem;
+  letter-spacing:-0.01em;
+}
+.dish-name em{font-style:italic;color:var(--gold2);font-weight:400;}
+
+.dish-desc{
+  font-size:0.75rem;font-weight:200;
+  color:rgba(255,255,255,0.55);
+  line-height:1.75;margin-bottom:1.4rem;
+  max-width:320px;
+}
+
+.dish-footer{
+  display:flex;align-items:center;justify-content:space-between;
+}
+.dish-price{
+  font-family:'Playfair Display',serif;
+  font-size:1.6rem;font-weight:400;
+  color:var(--gold2);letter-spacing:0.02em;
+}
+.dish-price span{font-size:0.9rem;font-weight:300;margin-right:0.15rem;}
+.dish-add{
+  border:1px solid rgba(201,168,76,0.5);
+  background:transparent;
+  color:var(--gold);
+  width:44px;height:44px;border-radius:50%;
+  font-size:1.4rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.25s;font-weight:300;
+  font-family:'Jost',sans-serif;
+}
+.dish-add:active{background:var(--gold);color:var(--black);transform:scale(0.93);}
+.dish-add.done{background:var(--gold);color:var(--black);}
+
+/* ══ SIDEBAR ══ */
+#sidebar{
+  position:fixed;left:0;top:0;bottom:0;
+  width:52px;
+  z-index:100;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:0;
+  background:linear-gradient(to right, rgba(8,8,8,0.85) 0%, transparent 100%);
+  pointer-events:none;
+}
+#sidebar.visible{pointer-events:all;}
+
+/* botón hamburguesa / toggle */
+#sideToggle{
+  position:fixed;left:0;top:50%;transform:translateY(-50%);
+  width:28px;height:80px;
+  background:rgba(8,8,8,0.7);
+  border:none;
+  border-radius:0 8px 8px 0;
+  cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  z-index:101;
+  transition:width 0.25s;
+  backdrop-filter:blur(4px);
+}
+#sideToggle span{
+  display:block;width:10px;height:1px;
+  background:rgba(201,168,76,0.6);
+  transition:all 0.25s;
+}
+#sideToggle:hover span{background:var(--gold);}
+
+/* panel lateral expandido */
+#sidePanel{
+  position:fixed;left:0;top:0;bottom:0;
+  width:200px;
+  background:rgba(8,8,8,0.96);
+  border-right:1px solid rgba(201,168,76,0.12);
+  backdrop-filter:blur(12px);
+  z-index:102;
+  display:flex;flex-direction:column;
+  padding:2.5rem 0 2rem;
+  transform:translateX(-100%);
+  transition:transform 0.35s cubic-bezier(0.32,0.72,0,1);
+}
+#sidePanel.open{transform:translateX(0);}
+
+.side-header{
+  padding:0 1.4rem 1.5rem;
+  border-bottom:1px solid rgba(201,168,76,0.1);
+  margin-bottom:1rem;
+}
+.side-header-label{
+  font-size:0.5rem;letter-spacing:0.35em;
+  text-transform:uppercase;font-weight:200;
+  color:var(--gold);margin-bottom:0.4rem;
+}
+.side-header-name{
+  font-family:'Playfair Display',serif;
+  font-size:1rem;font-weight:400;
+  color:var(--white);font-style:italic;
+  line-height:1.2;
+}
+
+.side-items{
+  flex:1;overflow-y:auto;scrollbar-width:none;
+  display:flex;flex-direction:column;
+}
+.side-items::-webkit-scrollbar{display:none;}
+
+.side-item{
+  display:flex;align-items:center;gap:0.8rem;
+  padding:0.75rem 1.4rem;
+  cursor:pointer;
+  border:none;background:none;
+  text-align:left;width:100%;
+  position:relative;
+  transition:background 0.15s;
+}
+.side-item:hover{background:rgba(201,168,76,0.05);}
+.side-item.active{background:rgba(201,168,76,0.08);}
+.side-item.active::before{
+  content:'';
+  position:absolute;left:0;top:20%;bottom:20%;
+  width:2px;background:var(--gold);border-radius:0 2px 2px 0;
+}
+
+.side-item-num{
+  font-family:'Playfair Display',serif;
+  font-size:0.6rem;font-weight:400;font-style:italic;
+  color:rgba(201,168,76,0.4);
+  width:16px;flex-shrink:0;
+  transition:color 0.2s;
+}
+.side-item.active .side-item-num{color:var(--gold);}
+
+.side-item-text{
+  font-size:0.7rem;font-weight:200;
+  letter-spacing:0.08em;
+  color:rgba(255,255,255,0.4);
+  text-transform:uppercase;
+  transition:color 0.2s;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.side-item.active .side-item-text{color:rgba(255,255,255,0.9);}
+.side-item-type-cat .side-item-text{
+  color:rgba(201,168,76,0.6);
+  font-size:0.6rem;letter-spacing:0.15em;
+}
+.side-item-type-cat.active .side-item-text{color:var(--gold);}
+
+.side-close{
+  position:absolute;top:1.2rem;right:1rem;
+  background:none;border:none;color:rgba(255,255,255,0.2);
+  font-size:0.9rem;cursor:pointer;
+  transition:color 0.2s;padding:0.3rem;
+}
+.side-close:hover{color:rgba(255,255,255,0.6);}
+
+/* overlay de cierre al hacer tap fuera */
+#sideBackdrop{
+  position:fixed;inset:0;z-index:99;
+  display:none;
+}
+#sideBackdrop.open{display:block;}
+
+/* ══ CART ══ */
+#cart{
+  position:fixed;bottom:1.8rem;left:50%;transform:translateX(-50%) translateY(16px);
+  background:var(--gold);color:var(--black);
+  border-radius:100px;
+  padding:0.8rem 1.6rem;
+  display:flex;align-items:center;gap:1rem;
+  opacity:0;pointer-events:none;
+  transition:all 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  z-index:200;min-width:200px;
+  box-shadow:0 8px 32px rgba(201,168,76,0.3);
+}
+#cart.show{opacity:1;pointer-events:all;transform:translateX(-50%) translateY(0);}
+.cart-c{
+  background:var(--black);color:var(--gold);
+  width:22px;height:22px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.65rem;font-weight:700;
+}
+.cart-l{font-size:0.7rem;font-weight:400;letter-spacing:0.08em;flex:1;text-transform:uppercase;}
+.cart-p{font-family:'Playfair Display',serif;font-size:0.95rem;font-weight:700;}
+
+/* ══ ADMIN TRIGGER ══ */
+#admTrig{
+  position:fixed;bottom:0.5rem;left:50%;transform:translateX(-50%);
+  font-size:0.45rem;letter-spacing:0.25em;
+  color:rgba(255,255,255,0.06);
+  cursor:default;user-select:none;z-index:50;
+  font-family:monospace;
+}
+
+/* ══ ADMIN OVERLAY ══ */
+.adm-ov{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,0.85);
+  z-index:800;display:none;
+  align-items:flex-end;justify-content:center;
+  backdrop-filter:blur(8px);
+}
+.adm-ov.open{display:flex;}
+.adm-sh{
+  background:#111;
+  border:1px solid rgba(201,168,76,0.15);
+  border-bottom:none;
+  border-radius:16px 16px 0 0;
+  width:100%;max-width:480px;
+  padding:1.5rem 1.4rem 3rem;
+  max-height:90vh;overflow-y:auto;
+  animation:up 0.32s cubic-bezier(0.32,0.72,0,1);
+  scrollbar-width:none;
+}
+.adm-sh::-webkit-scrollbar{display:none;}
+@keyframes up{from{transform:translateY(100%)}to{transform:translateY(0)}}
+
+.adm-handle{
+  width:36px;height:3px;
+  background:rgba(201,168,76,0.3);
+  border-radius:10px;margin:0 auto 1.5rem;cursor:pointer;
+}
+.adm-ttl{
+  font-family:'Playfair Display',serif;
+  font-size:1.4rem;font-weight:400;
+  color:var(--white);margin-bottom:1.3rem;
+  font-style:italic;
+}
+.adm-tabs{
+  display:flex;border-bottom:1px solid rgba(255,255,255,0.08);
+  margin-bottom:1.2rem;gap:0;
+}
+.adm-tab{
+  flex:1;padding:0.6rem 0;border:none;background:none;
+  font-family:'Jost',sans-serif;font-size:0.6rem;
+  font-weight:300;letter-spacing:0.2em;text-transform:uppercase;
+  color:rgba(255,255,255,0.3);cursor:pointer;
+  position:relative;transition:color 0.2s;
+}
+.adm-tab::after{
+  content:'';position:absolute;bottom:-1px;left:0;right:0;
+  height:1px;background:var(--gold);
+  transform:scaleX(0);transition:transform 0.2s;
+}
+.adm-tab.active{color:var(--gold);}
+.adm-tab.active::after{transform:scaleX(1);}
+
+.adm-f{display:flex;flex-direction:column;gap:0.3rem;margin-bottom:0.85rem;}
+.adm-lbl{
+  font-size:0.55rem;letter-spacing:0.2em;
+  text-transform:uppercase;color:rgba(255,255,255,0.3);font-weight:300;
+}
+.adm-in{
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:4px;padding:0.65rem 0.9rem;
+  font-size:0.85rem;font-family:'Jost',sans-serif;
+  color:var(--white);outline:none;width:100%;
+  transition:border-color 0.2s;
+}
+.adm-in:focus{border-color:rgba(201,168,76,0.5);}
+.adm-in option{background:#111;color:var(--white);}
+.adm-hint{font-size:0.6rem;color:rgba(255,255,255,0.2);}
+
+.adm-btn{
+  background:var(--gold);color:var(--black);
+  border:none;border-radius:4px;
+  padding:0.75rem 1.2rem;width:100%;
+  font-family:'Jost',sans-serif;font-size:0.75rem;
+  font-weight:400;letter-spacing:0.15em;text-transform:uppercase;
+  cursor:pointer;transition:opacity 0.2s;margin-bottom:0.5rem;
+}
+.adm-btn:hover{opacity:0.85;}
+.adm-btn.ghost{
+  background:transparent;color:rgba(255,255,255,0.4);
+  border:1px solid rgba(255,255,255,0.1);
+}
+.adm-btn.danger{
+  background:transparent;color:#E57373;
+  border:1px solid rgba(229,115,115,0.3);
+}
+
+.adm-row{
+  display:flex;align-items:center;gap:0.7rem;
+  padding:0.75rem 0;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+}
+.adm-row:last-child{border:none;}
+.adm-row-em{font-size:1.3rem;width:28px;text-align:center;flex-shrink:0;}
+.adm-row-inf{flex:1;min-width:0;}
+.adm-row-nm{
+  font-size:0.82rem;color:var(--white);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.adm-row-mt{font-size:0.62rem;color:rgba(255,255,255,0.25);}
+.adm-row-ac{display:flex;gap:0.3rem;flex-shrink:0;}
+.adm-ic{
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:4px;padding:0.3rem 0.55rem;
+  cursor:pointer;font-size:0.72rem;
+}
+.adm-err{font-size:0.72rem;color:#E57373;min-height:1rem;margin-bottom:0.4rem;}
+.adm-dimmed{opacity:0.3;}
+
+.foto-prev{display:none;margin-top:0.6rem;border-radius:4px;overflow:hidden;height:110px;}
+.foto-prev img{width:100%;height:100%;object-fit:cover;}
+
+/* ══ TOAST ══ */
+#toast{
+  position:fixed;bottom:5rem;left:50%;
+  transform:translateX(-50%) translateY(8px);
+  background:var(--gold);color:var(--black);
+  padding:0.55rem 1.2rem;border-radius:100px;
+  font-size:0.72rem;font-weight:400;letter-spacing:0.1em;
+  opacity:0;transition:all 0.28s;z-index:999;
+  pointer-events:none;white-space:nowrap;
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+
+<!-- INTRO -->
+<div id="intro">
+  <div class="cover-deco-top" style="position:relative;top:auto;left:auto;transform:none;">
+    <div class="cover-est">Costa Rica · Fine Dining</div>
+    <div class="cover-line-h"></div>
+  </div>
+  <div class="intro-name" id="introNombre">NOIR</div>
+  <div class="intro-sub" id="introSlogan">Cocina de autor</div>
+  <button class="intro-btn" onclick="enterMenu()">Ver la carta</button>
+</div>
+
+<!-- APP -->
+<div id="app"></div>
+
+<!-- SIDEBAR BACKDROP -->
+<div id="sideBackdrop" onclick="closeSide()"></div>
+
+<!-- SIDEBAR TOGGLE -->
+<button id="sideToggle" onclick="toggleSide()" aria-label="Abrir carta">
+  <span></span><span></span><span></span>
+</button>
+
+<!-- SIDEBAR PANEL -->
+<div id="sidePanel">
+  <button class="side-close" onclick="closeSide()">✕</button>
+  <div class="side-header">
+    <div class="side-header-label">La Carta</div>
+    <div class="side-header-name" id="sideNombre">Noir</div>
+  </div>
+  <div class="side-items" id="sideItems"></div>
+</div>
+
+<!-- CART -->
+<div id="cart">
+  <div class="cart-c" id="cartCount">0</div>
+  <div class="cart-l">Pedido</div>
+  <div class="cart-p" id="cartTotal">₡0</div>
+</div>
+
+<!-- ADMIN TRIGGER -->
+<div id="admTrig" onclick="admTap()">menúdigitalpro.com</div>
+
+<!-- ADMIN OVERLAY -->
+<div class="adm-ov" id="admOv">
+  <div class="adm-sh">
+    <div class="adm-handle" onclick="closeAdm()"></div>
+
+    <!-- LOGIN -->
+    <div id="admLogin">
+      <div class="adm-ttl">Acceso privado</div>
+      <div class="adm-f">
+        <div class="adm-lbl">Contraseña</div>
+        <input type="password" class="adm-in" id="admPass" placeholder="••••" onkeydown="if(event.key==='Enter')doLogin()"/>
+      </div>
+      <div class="adm-err" id="admErr"></div>
+      <button class="adm-btn" onclick="doLogin()">Ingresar</button>
+      <div style="font-size:0.6rem;color:rgba(255,255,255,0.15);text-align:center;margin-top:0.5rem;">Contraseña por defecto: 1234</div>
+    </div>
+
+    <!-- MAIN -->
+    <div id="admMain" style="display:none;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem;">
+        <div class="adm-ttl" style="margin:0;">Panel</div>
+        <button onclick="closeAdm()" style="background:none;border:none;color:rgba(255,255,255,0.3);cursor:pointer;font-size:1.1rem;">✕</button>
+      </div>
+      <div class="adm-tabs">
+        <button class="adm-tab active" onclick="aTab('P',this)">Platillos</button>
+        <button class="adm-tab" onclick="aTab('C',this)">Categorías</button>
+        <button class="adm-tab" onclick="aTab('X',this)">Config</button>
+      </div>
+
+      <div id="aPanP">
+        <button class="adm-btn" onclick="openForm(null)">+ Agregar platillo</button>
+        <div id="listP"></div>
+      </div>
+
+      <div id="aPanC" style="display:none;">
+        <div class="adm-f">
+          <div class="adm-lbl">Nueva categoría</div>
+          <div style="display:flex;gap:0.5rem;">
+            <input class="adm-in" id="nCEm" placeholder="🍷" style="width:52px;text-align:center;"/>
+            <input class="adm-in" id="nCNm" placeholder="Nombre" style="flex:1;"/>
+          </div>
+        </div>
+        <button class="adm-btn" onclick="addCat()">+ Agregar</button>
+        <div id="listC"></div>
+      </div>
+
+      <div id="aPanX" style="display:none;">
+        <div class="adm-f"><div class="adm-lbl">Nombre del restaurante</div><input class="adm-in" id="xNom" placeholder="Noir"/></div>
+        <div class="adm-f"><div class="adm-lbl">Eslogan</div><input class="adm-in" id="xSlog" placeholder="Cocina de autor"/></div>
+        <div class="adm-f"><div class="adm-lbl">Horario</div><input class="adm-in" id="xHor" placeholder="Mar–Dom 6pm – 11pm"/></div>
+        <div class="adm-f"><div class="adm-lbl">Nueva contraseña</div><input type="password" class="adm-in" id="xPass" placeholder="Mínimo 4 caracteres"/></div>
+        <button class="adm-btn" onclick="saveConfig()">Guardar cambios</button>
+        <button class="adm-btn danger" onclick="doLogout()">Cerrar sesión</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FORM PLATILLO -->
+<div class="adm-ov" id="formOv">
+  <div class="adm-sh">
+    <div class="adm-handle" onclick="closeForm()"></div>
+    <div class="adm-ttl" id="formTtl">Agregar platillo</div>
+    <div class="adm-f"><div class="adm-lbl">Nombre *</div><input class="adm-in" id="fNom" placeholder="Ej: Lomo al vino tinto"/></div>
+    <div class="adm-f"><div class="adm-lbl">Descripción</div><textarea class="adm-in" id="fDesc" rows="2" placeholder="Descripción del platillo..." style="resize:vertical;"></textarea></div>
+    <div class="adm-f"><div class="adm-lbl">Categoría *</div><select class="adm-in" id="fCat"></select></div>
+    <div class="adm-f"><div class="adm-lbl">Precio (₡) *</div><input type="number" class="adm-in" id="fPrecio" placeholder="8500" min="0"/></div>
+    <div class="adm-f"><div class="adm-lbl">Emoji (se muestra si no hay foto)</div><input class="adm-in" id="fEm" placeholder="🍷" style="width:60px;text-align:center;font-size:1.2rem;"/></div>
+    <div class="adm-f">
+      <div class="adm-lbl">Foto — pegá el link directo de la imagen</div>
+      <input class="adm-in" id="fFoto" placeholder="https://i.ibb.co/..." oninput="prevFoto()"/>
+      <div class="adm-hint">Subí gratis en imgbb.com → copiá el "Direct link"</div>
+      <div class="foto-prev" id="fotoPrv"><img id="fotoImg" src="" alt=""/></div>
+    </div>
+    <div class="adm-f"><div class="adm-lbl">Etiqueta</div>
+      <select class="adm-in" id="fTag">
+        <option value="">— Sin etiqueta —</option>
+        <option value="sig">Signature</option>
+        <option value="new">Nouveau</option>
+        <option value="sea">De Temporada</option>
+        <option value="veg">Vegetariano</option>
+        <option value="chef">Chef's Choice</option>
+      </select>
+    </div>
+    <div style="display:flex;align-items:center;gap:0.7rem;margin-bottom:1rem;">
+      <input type="checkbox" id="fDisp" checked style="width:16px;height:16px;accent-color:var(--gold);"/>
+      <label style="font-size:0.78rem;color:rgba(255,255,255,0.4);font-weight:300;">Visible en la carta</label>
+    </div>
+    <div style="display:flex;gap:0.5rem;">
+      <button class="adm-btn ghost" style="flex:1;" onclick="closeForm()">Cancelar</button>
+      <button class="adm-btn" style="flex:2;" onclick="saveItem()">Guardar</button>
+    </div>
+    <button id="fDelBtn" class="adm-btn danger" style="display:none;" onclick="delItem()">Eliminar platillo</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ══ DATA ══════════════════════════
+const KEY='mdp_lux';
+const TAGS={sig:'Signature',new:'Nouveau',sea:'De Temporada',veg:'Vegetariano',chef:"Chef's Choice"};
+const ROMAN=['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV','XVI','XVII','XVIII','XIX','XX'];
+
+const DEF={
+  config:{nombre:'Noir',slogan:'Cocina costarricense de autor',horario:'Mar–Dom 6pm – 11pm',pass:'1234'},
+  cats:[
+    {id:'entradas',nom:'Entradas',emoji:'🌿'},
+    {id:'principales',nom:'Platos Principales',emoji:'🍽️'},
+    {id:'postres',nom:'Postres',emoji:'🍮'},
+    {id:'bebidas',nom:'Maridaje',emoji:'🍷'},
+  ],
+  items:[
+    {id:'d1',cat:'entradas',nom:'Patacones al Trufa',desc:'Tostones de plátano verde con emulsión de trufa negra, microgreens y flor de sal del Pacífico.',emoji:'🫔',precio:3800,tag:'sig',foto:'',disp:true},
+    {id:'d2',cat:'entradas',nom:'Ceviche de Pargo',desc:'Pargo fresco en leche de tigre con maracuyá, ají amarillo, cebolla morada y culantro criollo.',emoji:'🐟',precio:4200,tag:'chef',foto:'',disp:true},
+    {id:'d3',cat:'entradas',nom:'Sopa de Chayote',desc:'Veloutée de chayote costarricense con aceite de albahaca, parmesano curado y pan artesanal.',emoji:'🥣',precio:3200,tag:'veg',foto:'',disp:true},
+    {id:'d4',cat:'principales',nom:'Filete de Res Angus',desc:'Corte Angus 300g al carbón con mantequilla de hierbas, papas rústicas y reducción de vino Malbec.',emoji:'🥩',precio:14500,tag:'sig',foto:'',disp:true},
+    {id:'d5',cat:'principales',nom:'Corvina en Salsa Verde',desc:'Corvina del Pacífico en salsa de culantro y chile dulce, con arroz negro y tostones finos.',emoji:'🐠',precio:11200,tag:'sea',foto:'',disp:true},
+    {id:'d6',cat:'principales',nom:'Risotto de Palmito',desc:'Risotto Arborio cremoso con palmito fresco, parmesano añejo, limón meyer y aceite de oliva extra virgen.',emoji:'🌾',precio:9800,tag:'veg',foto:'',disp:true},
+    {id:'d7',cat:'principales',nom:'Pato Lacado',desc:'Pecho de pato con glaseado de guaro y miel de abeja, puré de ñampí y chips de plátano maduro.',emoji:'🦆',precio:13500,tag:'chef',foto:'',disp:true},
+    {id:'d8',cat:'postres',nom:'Tres Leches de Autor',desc:'Bizcocho ligero en tres leches, mousse de vainilla de Chirripó, caramelo salado y helado artesanal.',emoji:'🍰',precio:4500,tag:'sig',foto:'',disp:true},
+    {id:'d9',cat:'postres',nom:'Coulant de Chocolate',desc:'Coulant de cacao 70% con centro fundente, helado de ron y crumble de macadamia caramelizada.',emoji:'🍫',precio:4800,tag:'new',foto:'',disp:true},
+    {id:'d10',cat:'bebidas',nom:'Vino Malbec Reserva',desc:'Malbec Reserva de Mendoza. Copa / Botella. Notas de ciruela oscura, especias y roble tostado.',emoji:'🍷',precio:4200,tag:'',foto:'',disp:true},
+    {id:'d11',cat:'bebidas',nom:'Agua de Sapo Signature',desc:'Nuestra versión de autor: jengibre fresco, limón dulce, tapa de dulce artesanal y agua con gas.',emoji:'🍋',precio:2800,tag:'sig',foto:'',disp:true},
+  ]
+};
+
+function get(){try{return JSON.parse(localStorage.getItem(KEY))||DEF;}catch{return DEF;}}
+function save(d){localStorage.setItem(KEY,JSON.stringify(d));}
+function uid(){return 'd'+Date.now().toString(36);}
+
+// ══ BUILD PAGES ══════════════════
+let pages=[];
+let currentPage=0;
+let cart=[];
+
+function buildPages(){
+  const d=get();
+  const app=document.getElementById('app');
+  app.innerHTML='';
+  pages=[];
+
+  // Update intro
+  document.getElementById('introNombre').textContent=d.config.nombre.toUpperCase();
+  document.getElementById('introSlogan').textContent=d.config.slogan;
+
+  // Cover page
+  const cover=document.createElement('div');
+  cover.className='page';cover.id='cover';
+  cover.innerHTML=`
+    <div class="cover-bg"></div>
+    <div class="cover-deco-top">
+      <div class="cover-est">${d.config.horario||'Fine Dining · Costa Rica'}</div>
+      <div class="cover-line-h"></div>
+    </div>
+    <div class="cover-inner">
+      <div class="cover-roman">La Carta</div>
+      <div class="cover-title">${formatName(d.config.nombre)}</div>
+      <div class="cover-ornament">
+        <div class="orn-line"></div>
+        <div class="orn-diamond"></div>
+        <div class="orn-line r"></div>
+      </div>
+      <div class="cover-tagline">${d.config.slogan||''}</div>
+    </div>
+    <div class="cover-scroll-hint">
+      <div class="cover-scroll-text">Deslizá para explorar</div>
+      <div class="scroll-arrow"></div>
+    </div>`;
+  app.appendChild(cover);
+  pages.push({type:'cover',el:cover});
+
+  let dishIndex=0;
+  d.cats.forEach((cat,ci)=>{
+    const items=d.items.filter(x=>x.cat===cat.id&&x.disp);
+    if(!items.length)return;
+
+    // Category divider
+    const catPage=document.createElement('div');
+    catPage.className='page cat-page';
+    catPage.innerHTML=`
+      <div class="cat-num">${ROMAN[ci]||ci+1}</div>
+      <div class="cat-page-inner">
+        <div class="cat-label">Sección ${ROMAN[ci]||ci+1}</div>
+        <div class="cat-line-v"></div>
+        <div class="cat-name">${cat.nom}</div>
+        <div class="cat-count">${items.length} ${items.length===1?'preparación':'preparaciones'}</div>
+      </div>`;
+    app.appendChild(catPage);
+    pages.push({type:'cat',el:catPage,cat:cat.nom});
+
+    items.forEach(item=>{
+      dishIndex++;
+      const dp=document.createElement('div');
+      dp.className='page dish-page';
+
+      const tagHtml=item.tag&&TAGS[item.tag]
+        ?`<div class="dish-badge">${TAGS[item.tag]}</div>` :'';
+
+      const mediaHtml=item.foto
+        ?`<div class="dish-photo"><img src="${item.foto}" alt="${esc(item.nom)}" onerror="this.parentElement.innerHTML='<div class=dish-photo-placeholder>${item.emoji||'🍽️'}</div>'"/></div>`
+        :`<div class="dish-photo"><div class="dish-photo-placeholder">${item.emoji||'🍽️'}</div></div>`;
+
+      dp.innerHTML=`
+        ${mediaHtml}
+        <div class="dish-vignette"></div>
+        <div class="dish-top">
+          <div class="dish-index">${ROMAN[dishIndex-1]||dishIndex}</div>
+          <div class="dish-cat-label">${cat.nom}</div>
+        </div>
+        <div class="dish-bottom">
+          <div class="dish-ornament">
+            <div class="dish-orn-line"></div>
+            ${tagHtml}
+          </div>
+          <div class="dish-name">${formatItemName(item.nom)}</div>
+          <div class="dish-desc">${item.desc}</div>
+          <div class="dish-footer">
+            <div class="dish-price"><span>₡</span>${item.precio.toLocaleString('es-CR')}</div>
+            <button class="dish-add" onclick="addToCart('${item.id}',this)">+</button>
+          </div>
+        </div>`;
+      app.appendChild(dp);
+      pages.push({type:'dish',el:dp,item});
+    });
+  });
+
+  buildSidebar();
+  setupScroll();
+}
+
+function formatName(n){
+  if(!n)return 'Noir';
+  const w=n.trim().split(' ');
+  if(w.length===1)return `<span>${n}</span>`;
+  return w.slice(0,-1).join(' ')+'<em>'+w[w.length-1]+'</em>';
+}
+
+function formatItemName(n){
+  if(!n)return '';
+  const w=n.trim().split(' ');
+  if(w.length<=2)return n;
+  // italicize last word for elegance
+  return w.slice(0,-1).join(' ')+' <em>'+w[w.length-1]+'</em>';
+}
+
+function esc(s){return(s||'').replace(/'/g,"&#39;").replace(/"/g,"&quot;");}
+
+// ══ SIDEBAR ═══════════════════════
+function buildSidebar(){
+  const d=get();
+  document.getElementById('sideNombre').textContent=d.config.nombre||'Noir';
+
+  const items=document.getElementById('sideItems');
+  items.innerHTML='';
+
+  // Portada
+  const coverBtn=document.createElement('button');
+  coverBtn.className='side-item side-item-type-cat active';
+  coverBtn.dataset.pageIdx=0;
+  coverBtn.innerHTML=`<span class="side-item-num">·</span><span class="side-item-text">Portada</span>`;
+  coverBtn.onclick=()=>{goToPage(0);closeSide();};
+  items.appendChild(coverBtn);
+
+  // Recorrer páginas y crear entradas
+  pages.forEach((p,i)=>{
+    if(p.type==='cover')return;
+    const btn=document.createElement('button');
+    btn.dataset.pageIdx=i;
+    if(p.type==='cat'){
+      btn.className='side-item side-item-type-cat';
+      btn.innerHTML=`<span class="side-item-num">${romanOf(i)}</span><span class="side-item-text">${p.cat}</span>`;
+    } else {
+      btn.className='side-item';
+      btn.innerHTML=`<span class="side-item-num">—</span><span class="side-item-text">${p.item.nom}</span>`;
+    }
+    btn.onclick=()=>{goToPage(i);closeSide();};
+    items.appendChild(btn);
+  });
+}
+
+function romanOf(pageIdx){
+  // Contar categorías vistas hasta ese índice
+  let count=0;
+  for(let i=0;i<pageIdx;i++){
+    if(pages[i]&&pages[i].type==='cat')count++;
+  }
+  return ROMAN[count]||'—';
+}
+
+function updateSidebar(idx){
+  document.querySelectorAll('.side-item').forEach(btn=>{
+    btn.classList.toggle('active',parseInt(btn.dataset.pageIdx)===idx);
+  });
+  // Auto-scroll dentro del panel
+  const active=document.querySelector('.side-item.active');
+  if(active)active.scrollIntoView({block:'nearest',behavior:'smooth'});
+}
+
+function toggleSide(){
+  const open=document.getElementById('sidePanel').classList.contains('open');
+  if(open)closeSide();else openSide();
+}
+function openSide(){
+  document.getElementById('sidePanel').classList.add('open');
+  document.getElementById('sideBackdrop').classList.add('open');
+}
+function closeSide(){
+  document.getElementById('sidePanel').classList.remove('open');
+  document.getElementById('sideBackdrop').classList.remove('open');
+}
+
+// ══ SCROLL TRACKING ══════════════
+function setupScroll(){
+  const app=document.getElementById('app');
+  let ticking=false;
+  app.addEventListener('scroll',()=>{
+    if(!ticking){
+      requestAnimationFrame(()=>{
+        const idx=Math.round(app.scrollTop/window.innerHeight);
+        if(idx!==currentPage){currentPage=idx;updateSidebar(idx);}
+        ticking=false;
+      });
+      ticking=true;
+    }
+  },{passive:true});
+}
+
+function goToPage(i){
+  const app=document.getElementById('app');
+  app.scrollTo({top:i*window.innerHeight,behavior:'smooth'});
+  currentPage=i;updateSidebar(i);
+}
+
+// ══ INTRO ════════════════════════
+function enterMenu(){
+  document.getElementById('intro').classList.add('out');
+}
+
+// ══ CART ═════════════════════════
+function addToCart(id,btn){
+  const d=get();
+  const item=d.items.find(x=>x.id===id);
+  if(!item)return;
+  cart.push({nom:item.nom,precio:item.precio});
+  updateCart();
+  btn.textContent='✓';btn.classList.add('done');
+  setTimeout(()=>{btn.textContent='+';btn.classList.remove('done');},1400);
+}
+
+function updateCart(){
+  const total=cart.reduce((s,i)=>s+i.precio,0);
+  document.getElementById('cartCount').textContent=cart.length;
+  document.getElementById('cartTotal').textContent='₡'+total.toLocaleString('es-CR');
+  document.getElementById('cart').classList.toggle('show',cart.length>0);
+}
+
+// ══ ADMIN ════════════════════════
+let taps=0,tapT;
+function admTap(){
+  taps++;clearTimeout(tapT);
+  tapT=setTimeout(()=>taps=0,2000);
+  if(taps>=5){taps=0;openAdm();}
+}
+
+function openAdm(){
+  const ok=sessionStorage.getItem('adm')==='1';
+  document.getElementById('admLogin').style.display=ok?'none':'block';
+  document.getElementById('admMain').style.display=ok?'block':'none';
+  document.getElementById('admErr').textContent='';
+  document.getElementById('admPass').value='';
+  document.getElementById('admOv').classList.add('open');
+  if(ok)loadAdm();
+  else setTimeout(()=>document.getElementById('admPass').focus(),300);
+}
+function closeAdm(){document.getElementById('admOv').classList.remove('open');}
+
+function doLogin(){
+  const d=get(),p=document.getElementById('admPass').value;
+  if(p===d.config.pass){
+    sessionStorage.setItem('adm','1');
+    document.getElementById('admLogin').style.display='none';
+    document.getElementById('admMain').style.display='block';
+    loadAdm();
+  }else{
+    document.getElementById('admErr').textContent='Contraseña incorrecta';
+    document.getElementById('admPass').value='';
+  }
+}
+function doLogout(){sessionStorage.removeItem('adm');closeAdm();}
+
+function loadAdm(){aTab('P',document.querySelector('.adm-tab.active')||document.querySelectorAll('.adm-tab')[0]);}
+
+function aTab(t,btn){
+  ['P','C','X'].forEach(x=>{
+    const el=document.getElementById('aPan'+x);
+    if(el)el.style.display=x===t?'block':'none';
+  });
+  document.querySelectorAll('.adm-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if(t==='P')renderListP();
+  if(t==='C')renderListC();
+  if(t==='X')loadConfig();
+}
+
+function renderListP(){
+  const d=get();
+  const catMap={};d.cats.forEach(c=>catMap[c.id]=c);
+  document.getElementById('listP').innerHTML=d.items.length?d.items.map(p=>`
+    <div class="adm-row ${p.disp?'':'adm-dimmed'}">
+      <div class="adm-row-em">${p.foto?`<img src="${p.foto}" style="width:28px;height:28px;border-radius:3px;object-fit:cover;" onerror="this.outerHTML='${p.emoji||'🍽️'}'">`:(p.emoji||'🍽️')}</div>
+      <div class="adm-row-inf">
+        <div class="adm-row-nm">${p.nom}</div>
+        <div class="adm-row-mt">₡${p.precio.toLocaleString('es-CR')} · ${catMap[p.cat]?.nom||p.cat}${p.disp?'':' · oculto'}</div>
+      </div>
+      <div class="adm-row-ac">
+        <button class="adm-ic" onclick="toggleD('${p.id}')">${p.disp?'👁':'👁‍🗨'}</button>
+        <button class="adm-ic" onclick="openForm('${p.id}')">✏️</button>
+      </div>
+    </div>`).join('')
+    :'<div style="color:rgba(255,255,255,0.2);text-align:center;padding:1.5rem;font-size:0.8rem;">Sin platillos</div>';
+}
+
+function toggleD(id){
+  const d=get();const p=d.items.find(x=>x.id===id);
+  if(p){p.disp=!p.disp;save(d);renderListP();buildPages();toast(p.disp?'Visible':'Oculto');}
+}
+
+let editId=null;
+function openForm(id){
+  const d=get();editId=id;
+  const sel=document.getElementById('fCat');
+  sel.innerHTML=d.cats.map(c=>`<option value="${c.id}">${c.nom}</option>`).join('');
+  if(id){
+    const p=d.items.find(x=>x.id===id);if(!p)return;
+    document.getElementById('formTtl').textContent='Editar platillo';
+    document.getElementById('fNom').value=p.nom;
+    document.getElementById('fDesc').value=p.desc;
+    document.getElementById('fCat').value=p.cat;
+    document.getElementById('fPrecio').value=p.precio;
+    document.getElementById('fEm').value=p.emoji||'';
+    document.getElementById('fFoto').value=p.foto||'';
+    document.getElementById('fTag').value=p.tag||'';
+    document.getElementById('fDisp').checked=p.disp;
+    document.getElementById('fDelBtn').style.display='block';
+    prevFoto();
+  }else{
+    document.getElementById('formTtl').textContent='Agregar platillo';
+    ['fNom','fDesc','fPrecio','fEm','fFoto'].forEach(f=>document.getElementById(f).value='');
+    document.getElementById('fTag').value='';
+    document.getElementById('fDisp').checked=true;
+    document.getElementById('fDelBtn').style.display='none';
+    document.getElementById('fotoPrv').style.display='none';
+  }
+  document.getElementById('formOv').classList.add('open');
+}
+function closeForm(){document.getElementById('formOv').classList.remove('open');}
+
+function prevFoto(){
+  const url=document.getElementById('fFoto').value.trim();
+  document.getElementById('fotoImg').src=url;
+  document.getElementById('fotoPrv').style.display=url?'block':'none';
+}
+
+function saveItem(){
+  const nom=document.getElementById('fNom').value.trim();
+  const cat=document.getElementById('fCat').value;
+  const precio=parseInt(document.getElementById('fPrecio').value)||0;
+  if(!nom||!cat||!precio){toast('Nombre, categoría y precio son obligatorios','err');return;}
+  const d=get();
+  const obj={
+    id:editId||uid(),cat,nom,
+    desc:document.getElementById('fDesc').value.trim(),
+    emoji:document.getElementById('fEm').value.trim()||'🍽️',
+    precio,
+    foto:document.getElementById('fFoto').value.trim(),
+    tag:document.getElementById('fTag').value,
+    disp:document.getElementById('fDisp').checked
+  };
+  if(editId){const i=d.items.findIndex(x=>x.id===editId);if(i>-1)d.items[i]=obj;}
+  else d.items.push(obj);
+  save(d);closeForm();buildPages();renderListP();
+  toast(editId?'Actualizado ✓':'Agregado ✓');
+}
+
+function delItem(){
+  if(!confirm('¿Eliminar este platillo?'))return;
+  const d=get();d.items=d.items.filter(x=>x.id!==editId);
+  save(d);closeForm();buildPages();renderListP();toast('Eliminado');
+}
+
+function renderListC(){
+  const d=get();
+  document.getElementById('listC').innerHTML=d.cats.map(c=>`
+    <div class="adm-row">
+      <div class="adm-row-em">${c.emoji}</div>
+      <div class="adm-row-inf"><div class="adm-row-nm">${c.nom}</div></div>
+      <div class="adm-row-ac"><button class="adm-ic" onclick="delCat('${c.id}')">🗑</button></div>
+    </div>`).join('');
+}
+
+function addCat(){
+  const emoji=document.getElementById('nCEm').value.trim()||'🍽️';
+  const nom=document.getElementById('nCNm').value.trim();
+  if(!nom){toast('Escribí el nombre','err');return;}
+  const d=get();
+  const id=nom.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
+  if(d.cats.find(c=>c.id===id)){toast('Ya existe','err');return;}
+  d.cats.push({id,nom,emoji});save(d);
+  document.getElementById('nCEm').value='';document.getElementById('nCNm').value='';
+  renderListC();buildPages();toast('Categoría agregada ✓');
+}
+
+function delCat(id){
+  const d=get();
+  if(d.items.some(p=>p.cat===id)){toast('Tiene platillos asignados','err');return;}
+  if(!confirm('¿Eliminar?'))return;
+  d.cats=d.cats.filter(c=>c.id!==id);save(d);renderListC();buildPages();toast('Eliminada');
+}
+
+function loadConfig(){
+  const d=get();
+  document.getElementById('xNom').value=d.config.nombre||'';
+  document.getElementById('xSlog').value=d.config.slogan||'';
+  document.getElementById('xHor').value=d.config.horario||'';
+  document.getElementById('xPass').value='';
+}
+
+function saveConfig(){
+  const d=get();
+  d.config.nombre=document.getElementById('xNom').value.trim()||d.config.nombre;
+  d.config.slogan=document.getElementById('xSlog').value.trim();
+  d.config.horario=document.getElementById('xHor').value.trim();
+  const np=document.getElementById('xPass').value;
+  if(np&&np.length>=4)d.config.pass=np;
+  else if(np){toast('La contraseña debe tener al menos 4 caracteres','err');return;}
+  save(d);buildPages();toast('Guardado ✓');
+}
+
+let _t;
+function toast(msg,type='ok'){
+  const el=document.getElementById('toast');
+  el.textContent=msg;
+  el.style.background=type==='err'?'#E57373':'var(--gold)';
+  el.style.color=type==='err'?'#fff':'var(--black)';
+  el.classList.add('show');clearTimeout(_t);
+  _t=setTimeout(()=>el.classList.remove('show'),2600);
+}
+
+// Init
+buildPages();
+</script>
+</body>
+</html>
