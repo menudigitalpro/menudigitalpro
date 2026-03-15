@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Estilos de Menú — MenúDigitalPro</title>
+  <title>Catálogo de Servicios — MenúDigitalPro</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -11,6 +11,8 @@
       --cream: #F5F0E8; --dark: #1A1408; --gold: #C9A84C;
       --gold-light: #E8CC7A; --rust: #8B3A1E; --warm-gray: #6B6152;
       --border: rgba(201,168,76,0.25);
+      --blue: #2D3561; --blue2: #3D4A82; --blue3: #6B7BC4;
+      --green: #1E4A2A; --green2: #2E6A3E;
     }
     html, body { width: 100%; margin: 0; padding: 0; scroll-behavior: smooth; }
     body {
@@ -37,8 +39,7 @@
       color: var(--gold); font-size: 0.82rem; letter-spacing: 0.1em;
       text-transform: uppercase; text-decoration: none;
       margin-bottom: 2rem; cursor: pointer;
-      background: none; border: none;
-      transition: opacity 0.2s;
+      background: none; border: none; transition: opacity 0.2s;
     }
     .back-btn:hover { opacity: 0.7; }
     .cat-badge {
@@ -57,7 +58,7 @@
     .cat-title em { font-style: italic; color: var(--gold); }
     .cat-desc {
       font-size: 1rem; color: rgba(245,240,232,0.6);
-      max-width: 540px; margin: 0 auto 2rem; line-height: 1.7;
+      max-width: 560px; margin: 0 auto 2rem; line-height: 1.7;
     }
     .cat-cta {
       display: inline-block;
@@ -70,66 +71,153 @@
     }
     .cat-cta:hover { background: var(--gold-light); transform: translateY(-2px); }
 
-    /* ── GRID ── */
+    /* ── TABS ── */
+    .tabs-wrap {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(26,20,8,0.97);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .tabs {
+      display: flex; justify-content: center;
+      max-width: 900px; margin: 0 auto;
+    }
+    .tab-btn {
+      flex: 1; max-width: 260px;
+      padding: 1.1rem 1rem;
+      background: none; border: none; cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: rgba(245,240,232,0.35);
+      border-bottom: 2px solid transparent;
+      transition: all 0.25s;
+      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+    }
+    .tab-btn:hover { color: rgba(245,240,232,0.7); }
+    .tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+    .tab-btn .tab-icon { font-size: 1.1rem; }
+    .tab-btn .tab-count {
+      font-size: 0.6rem; background: rgba(201,168,76,0.15);
+      border: 1px solid rgba(201,168,76,0.2);
+      color: var(--gold); padding: 0.1rem 0.45rem;
+      border-radius: 100px;
+    }
+    .tab-btn.active .tab-count { background: rgba(201,168,76,0.25); }
+
+    /* ── TAB PANELS ── */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── SECTION INTRO ── */
+    .section-intro {
+      text-align: center; padding: 2.5rem 2rem 0;
+      max-width: 680px; margin: 0 auto;
+    }
+    .section-intro-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem; font-weight: 300; color: var(--cream); margin-bottom: 0.5rem;
+    }
+    .section-intro-title em { font-style: italic; color: var(--gold); }
+    .section-intro-desc { font-size: 0.85rem; color: rgba(245,240,232,0.4); line-height: 1.7; }
+
+    /* ── GRIDS ── */
     .cat-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 2rem;
-      padding: 3rem 2rem;
-      max-width: 1200px;
-      margin: 0 auto;
+      gap: 2rem; padding: 2.5rem 2rem 3rem;
+      max-width: 1200px; margin: 0 auto;
     }
 
-    /* ── STYLE CARD ── */
-    .style-card {
-      border: 1px solid rgba(201,168,76,0.15);
+    /* ── CARDS BASE ── */
+    .style-card, .web-card, .inv-card {
       border-radius: 12px; overflow: hidden;
       transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
-      cursor: pointer; background: rgba(255,255,255,0.03);
+      cursor: pointer;
+    }
+    /* Menu cards */
+    .style-card {
+      border: 1px solid rgba(201,168,76,0.15);
+      background: rgba(255,255,255,0.03);
     }
     .style-card:hover {
-      transform: translateY(-6px);
-      border-color: var(--gold);
+      transform: translateY(-6px); border-color: var(--gold);
       box-shadow: 0 20px 60px rgba(0,0,0,0.4);
     }
-    .style-preview {
+    /* Web cards */
+    .web-card {
+      border: 1px solid rgba(107,123,196,0.2);
+      background: rgba(45,53,97,0.08);
+    }
+    .web-card:hover {
+      transform: translateY(-6px); border-color: var(--blue3);
+      box-shadow: 0 20px 60px rgba(45,53,97,0.3);
+    }
+    /* Inventory cards */
+    .inv-card {
+      border: 1px solid rgba(111,207,151,0.15);
+      background: rgba(30,74,42,0.06);
+    }
+    .inv-card:hover {
+      transform: translateY(-6px); border-color: #6FCF97;
+      box-shadow: 0 20px 60px rgba(30,74,42,0.25);
+    }
+
+    /* ── PREVIEWS ── */
+    .style-preview, .web-preview, .inv-preview {
       height: 380px; overflow: hidden; position: relative;
     }
-    .style-preview iframe {
+    .style-preview iframe, .web-preview iframe, .inv-preview iframe {
       width: 200%; height: 200%;
       transform: scale(0.5); transform-origin: top left;
       border: none; pointer-events: none;
-      border-radius: 0;
     }
-    .style-preview .preview-overlay {
+    .preview-overlay {
       position: absolute; inset: 0;
-      background: linear-gradient(to bottom, transparent 60%, rgba(26,20,8,0.8) 100%);
+      background: linear-gradient(to bottom, transparent 55%, rgba(10,8,4,0.85) 100%);
     }
-    .style-preview .coming-soon {
+    .coming-soon {
       position: absolute; inset: 0;
       display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      gap: 0.8rem;
+      align-items: center; justify-content: center; gap: 0.8rem;
     }
-    .style-info {
-      padding: 1.4rem 1.5rem;
-    }
+
+    /* ── INFO SECTIONS ── */
+    .style-info, .web-info, .inv-info { padding: 1.4rem 1.5rem; }
+
+    /* ── TAGS ── */
     .style-tag {
       font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase;
       padding: 0.2rem 0.7rem; border-radius: 100px;
       display: inline-block; margin-bottom: 0.6rem; font-weight: 600;
     }
     .tag-available { background: rgba(46,139,87,0.2); color: #4CAF79; }
-    .tag-soon { background: rgba(201,168,76,0.15); color: var(--gold); }
+    .tag-soon      { background: rgba(201,168,76,0.15); color: var(--gold); }
+    .tag-web       { background: rgba(45,53,97,0.35); color: var(--blue3); border: 1px solid rgba(107,123,196,0.2); }
+    .tag-inv       { background: rgba(30,74,42,0.4); color: #6FCF97; border: 1px solid rgba(111,207,151,0.2); }
+
+    /* ── NAMES & DESCS ── */
     .style-name {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 1.4rem; font-weight: 600; color: var(--cream);
-      margin-bottom: 0.4rem;
+      font-size: 1.4rem; font-weight: 600; color: var(--cream); margin-bottom: 0.4rem;
     }
-    .style-desc {
-      font-size: 0.82rem; color: rgba(245,240,232,0.5);
-      line-height: 1.6; margin-bottom: 1rem;
+    .style-desc { font-size: 0.82rem; color: rgba(245,240,232,0.5); line-height: 1.6; margin-bottom: 1rem; }
+
+    /* ── FEATURE CHIPS ── */
+    .web-features, .inv-features { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.8rem 0 1rem; }
+    .web-feature {
+      font-size: 0.6rem; letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 0.2rem 0.55rem; border-radius: 3px;
+      background: rgba(107,123,196,0.1); color: var(--blue3);
+      border: 1px solid rgba(107,123,196,0.15);
     }
+    .inv-feature {
+      font-size: 0.6rem; letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 0.2rem 0.55rem; border-radius: 3px;
+      background: rgba(111,207,151,0.08); color: #6FCF97;
+      border: 1px solid rgba(111,207,151,0.15);
+    }
+
+    /* ── BUTTONS ── */
     .style-btn {
       width: 100%; padding: 0.75rem;
       background: transparent; color: var(--gold);
@@ -139,36 +227,38 @@
       cursor: pointer; transition: all 0.25s;
     }
     .style-btn:hover { background: var(--gold); color: var(--dark); }
-    .style-btn.disabled {
-      color: rgba(245,240,232,0.25); border-color: rgba(201,168,76,0.1);
-      cursor: not-allowed;
-    }
+    .style-btn.blue  { color: var(--blue3); border-color: rgba(107,123,196,0.3); }
+    .style-btn.blue:hover  { background: var(--blue); color: white; border-color: var(--blue); }
+    .style-btn.green { color: #6FCF97; border-color: rgba(111,207,151,0.25); }
+    .style-btn.green:hover { background: var(--green); color: white; border-color: var(--green); }
+    .style-btn.disabled { color: rgba(245,240,232,0.25); border-color: rgba(201,168,76,0.08); cursor: not-allowed; }
     .style-btn.disabled:hover { background: transparent; color: rgba(245,240,232,0.25); }
 
-    /* ── COMING SOON CARDS ── */
-    .cs-emoji { font-size: 3rem; }
-    .cs-label {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.2rem; color: rgba(245,240,232,0.3);
-      font-style: italic;
+    /* ── COMING SOON LABELS ── */
+    .cs-emoji  { font-size: 3rem; }
+    .cs-label  { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; color: rgba(245,240,232,0.3); font-style: italic; }
+    .cs-sublabel { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(201,168,76,0.4); }
+
+    /* ── BOTTOM CTA ── */
+    .bottom-cta {
+      text-align: center; padding: 2.5rem 2rem;
+      background: rgba(201,168,76,0.04);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
     }
-    .cs-sublabel {
-      font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
-      color: rgba(201,168,76,0.4);
-    }
+    .bottom-cta-title { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; color: var(--cream); margin-bottom: 0.5rem; }
+    .bottom-cta p { color: rgba(245,240,232,0.5); font-size: 0.9rem; margin-bottom: 1.5rem; }
 
     /* ── FOOTER ── */
-    .cat-footer {
-      text-align: center; padding: 3rem 2rem;
-      border-top: 1px solid var(--border);
-      margin-top: 1rem;
-    }
+    .cat-footer { text-align: center; padding: 2rem; border-top: 1px solid var(--border); }
     .cat-footer p { font-size: 0.82rem; color: rgba(245,240,232,0.3); }
     .cat-footer span { color: var(--gold); }
 
     @media (max-width: 600px) {
-      .cat-grid { grid-template-columns: 1fr; padding: 2rem 1rem; }
-      .style-preview { height: 300px; }
+      .cat-grid { grid-template-columns: 1fr; padding: 1.5rem 1rem; }
+      .style-preview, .web-preview, .inv-preview { height: 300px; }
+      .tab-btn { font-size: 0.66rem; padding: 0.9rem 0.4rem; gap: 0.3rem; }
+      .tab-btn .tab-icon { display: none; }
     }
   </style>
 </head>
@@ -177,225 +267,415 @@
   <!-- HEADER -->
   <div class="cat-header">
     <button class="back-btn" onclick="window.open('https://menudigitalpro.github.io/menudigitalpro/','_blank')">← Volver</button>
-    <div class="cat-badge">✦ Catálogo de Estilos</div>
-    <h1 class="cat-title">Elegí el estilo<br><em>de tu menú</em></h1>
-    <p class="cat-desc">Cada negocio es único. Mostramos diferentes estilos para que tu cliente elija el que mejor representa su marca. Todos incluidos en el mismo precio.</p>
-    <button class="cat-cta" onclick="window.open('https://wa.me/50671186158','_blank')">Solicitar el mío</button>
+    <div class="cat-badge">✦ Catálogo de Servicios</div>
+    <h1 class="cat-title">Todo lo que podemos<br><em>hacer por tu negocio</em></h1>
+    <p class="cat-desc">Menús digitales QR, páginas web completas y sistemas de inventario. Todo diseñado y listo para usar — vos solo te encargás de tu negocio.</p>
+    <button class="cat-cta" onclick="window.open('https://wa.me/50671186158','_blank')">Solicitar información</button>
   </div>
 
-  <!-- GRID -->
-  <div class="cat-grid">
-
-    <!-- CARD 1: Soda · 2 estilos rotativos -->
-    <div class="style-card">
-      <div class="style-preview" style="position:relative;overflow:hidden;height:380px;cursor:default;">
-        <div style="position:absolute;inset:0;">
-          <iframe
-            src="https://menudigitalpro.github.io/menudigitalpro/menu-googlesite.html"
-            id="frame-soda-0"
-            style="width:200%;height:200%;transform:scale(0.5);transform-origin:top left;border:none;pointer-events:none;position:absolute;top:0;left:0;opacity:1;transition:opacity 0.8s ease;"
-            loading="lazy" tabindex="-1"></iframe>
-          <iframe
-            src="https://menudigitalpro.github.io/menudigitalpro/menu-soda.html"
-            id="frame-soda-1"
-            style="width:200%;height:200%;transform:scale(0.5);transform-origin:top left;border:none;pointer-events:none;position:absolute;top:0;left:0;opacity:0;transition:opacity 0.8s ease;"
-            loading="lazy" tabindex="-1"></iframe>
-        </div>
-        <div class="preview-overlay"></div>
-        <div style="position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:10;">
-          <div id="dot-soda-0" style="width:6px;height:6px;border-radius:50%;background:white;opacity:1;transition:opacity 0.3s;"></div>
-          <div id="dot-soda-1" style="width:6px;height:6px;border-radius:50%;background:white;opacity:0.3;transition:opacity 0.3s;"></div>
-        </div>
-      </div>
-      <div class="style-info">
-        <span class="style-tag tag-available">✓ Disponible · 2 estilos</span>
-        <div class="style-name">Estilo Soda / Comida Típica</div>
-        <div class="style-desc">Dos variantes: clásica verde con toques dorados y nueva versión callejera vibrante con cuadrícula de platillos y panel admin. Ideal para sodas y comida típica costarricense.</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-top:0.5rem;">
-          <button class="style-btn" onclick="window.open('https://menudigitalpro.github.io/menudigitalpro/menu-googlesite.html','_blank')">🍃 Clásica →</button>
-          <button class="style-btn" onclick="window.open('https://menudigitalpro.github.io/menudigitalpro/menu-soda.html','_blank')">🌮 Callejera →</button>
-        </div>
-      </div>
+  <!-- TABS -->
+  <div class="tabs-wrap">
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('menus',this)">
+        <span class="tab-icon">🍽️</span> Menús Digitales
+        <span class="tab-count">10</span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('web',this)">
+        <span class="tab-icon">🌐</span> Páginas Web
+        <span class="tab-count">2</span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('inventario',this)">
+        <span class="tab-icon">📦</span> Inventario / POS
+        <span class="tab-count">1</span>
+      </button>
     </div>
-
-    <!-- CARD 2: Japanese Available -->
-    <div class="style-card" onclick="window.open('https://menudigitalpro.github.io/menudigitalpro/menu-japones.html','_blank')">
-      <div class="style-preview">
-        <iframe src="https://menudigitalpro.github.io/menudigitalpro/menu-japones.html" loading="lazy" tabindex="-1"></iframe>
-        <div class="preview-overlay"></div>
-      </div>
-      <div class="style-info">
-        <span class="style-tag tag-available">✓ Disponible</span>
-        <div class="style-name">Estilo Japonés</div>
-        <div class="style-desc">Oscuro, elegante y minimalista. Negro profundo con rojo y dorado. Kanji decorativos y pétalos animados. Ideal para sushi, ramen y cocina asiática.</div>
-        <button class="style-btn">Ver Demo Completo →</button>
-      </div>
-    </div>
-
-    <!-- CARD 3: Gourmet · 2 estilos rotativos -->
-    <div class="style-card">
-      <div class="style-preview" style="position:relative;overflow:hidden;height:380px;cursor:default;">
-        <div style="position:absolute;inset:0;">
-          <iframe
-            src="https://menudigitalpro.github.io/menudigitalpro/menu-gourmet.html"
-            id="frame-gourmet-0"
-            style="width:200%;height:200%;transform:scale(0.5);transform-origin:top left;border:none;pointer-events:none;position:absolute;top:0;left:0;opacity:1;transition:opacity 0.8s ease;"
-            loading="lazy" tabindex="-1"></iframe>
-          <iframe
-            src="https://menudigitalpro.github.io/menudigitalpro/menu-luxury.html"
-            id="frame-gourmet-1"
-            style="width:200%;height:200%;transform:scale(0.5);transform-origin:top left;border:none;pointer-events:none;position:absolute;top:0;left:0;opacity:0;transition:opacity 0.8s ease;"
-            loading="lazy" tabindex="-1"></iframe>
-        </div>
-        <div class="preview-overlay"></div>
-        <div style="position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:10;">
-          <div id="dot-gourmet-0" style="width:6px;height:6px;border-radius:50%;background:white;opacity:1;transition:opacity 0.3s;"></div>
-          <div id="dot-gourmet-1" style="width:6px;height:6px;border-radius:50%;background:white;opacity:0.3;transition:opacity 0.3s;"></div>
-        </div>
-      </div>
-      <div class="style-info">
-        <span class="style-tag tag-available">✓ Disponible · 2 estilos</span>
-        <div class="style-name">Estilo Gourmet / Fine Dining</div>
-        <div class="style-desc">Dos variantes: gourmet azul marino con dorado artesanal y nueva versión luxury de pantalla completa con scroll cinematográfico. Para restaurantes de autor y haute cuisine.</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-top:0.5rem;">
-          <button class="style-btn" onclick="window.open('https://menudigitalpro.github.io/menudigitalpro/menu-gourmet.html','_blank')">🍷 Gourmet →</button>
-          <button class="style-btn" onclick="window.open('https://menudigitalpro.github.io/menudigitalpro/menu-luxury.html','_blank')">✦ Luxury →</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- CARD 4: Urbano Available -->
-    <div class="style-card" onclick="window.open('https://menudigitalpro.github.io/menudigitalpro/menu-urbano.html','_blank')">
-      <div class="style-preview">
-        <iframe src="https://menudigitalpro.github.io/menudigitalpro/menu-urbano.html" loading="lazy" tabindex="-1"></iframe>
-        <div class="preview-overlay"></div>
-      </div>
-      <div class="style-info">
-        <span class="style-tag tag-available">✓ Disponible</span>
-        <div class="style-name">Estilo Urbano</div>
-        <div class="style-desc">Vibrante y juvenil. Morados y neones sobre fondo oscuro. Ideal para hamburgueserías, tacos, comida rápida gourmet y street food.</div>
-        <button class="style-btn">Ver Demo Completo →</button>
-      </div>
-    </div>
-
-    <!-- CARD 5: Café Available -->
-    <div class="style-card" onclick="window.open('https://menudigitalpro.github.io/menudigitalpro/menu-cafe.html','_blank')">
-      <div class="style-preview">
-        <iframe src="https://menudigitalpro.github.io/menudigitalpro/menu-cafe.html" loading="lazy" tabindex="-1"></iframe>
-        <div class="preview-overlay"></div>
-      </div>
-      <div class="style-info">
-        <span class="style-tag tag-available">✓ Disponible</span>
-        <div class="style-name">Estilo Café</div>
-        <div class="style-desc">Cálido, artesanal y acogedor. Cremas y cafés con serif elegante. Para cafeterías, panaderías, pastelerías y brunch.</div>
-        <button class="style-btn">Ver Demo Completo →</button>
-      </div>
-    </div>
-
-    <!-- CARD 6: Orgánico Available -->
-    <div class="style-card" onclick="window.open('https://menudigitalpro.github.io/menudigitalpro/menu-organico.html','_blank')">
-      <div class="style-preview">
-        <iframe src="https://menudigitalpro.github.io/menudigitalpro/menu-organico.html" loading="lazy" tabindex="-1"></iframe>
-        <div class="preview-overlay"></div>
-      </div>
-      <div class="style-info">
-        <span class="style-tag tag-available">✓ Disponible</span>
-        <div class="style-name">Estilo Orgánico</div>
-        <div class="style-desc">Natural, fresco y saludable. Verdes profundos con texturas orgánicas. Para restaurantes vegetarianos, veganos y comida saludable.</div>
-        <button class="style-btn">Ver Demo Completo →</button>
-      </div>
-    </div>
-
   </div>
 
-    <!-- CARD 7: Pizzería Available -->
-    <div class="style-card" onclick="window.open('https://menudigitalpro.github.io/menudigitalpro/menu-pizzeria-cr.html','_blank')">
-      <div class="style-preview">
-        <iframe src="https://menudigitalpro.github.io/menudigitalpro/menu-pizzeria-cr.html" loading="lazy" tabindex="-1"></iframe>
-        <div class="preview-overlay"></div>
+
+  <!-- ══════════════════════════════════════
+       TAB 1 — MENÚS DIGITALES
+  ══════════════════════════════════════ -->
+  <div class="tab-panel active" id="panel-menus">
+    <div class="section-intro">
+      <div class="section-intro-title">Elegí el estilo <em>de tu menú</em></div>
+      <p class="section-intro-desc">Cada negocio es único. Mostramos diferentes estilos para que tu cliente elija el que mejor representa su marca. Todos al mismo precio.</p>
+    </div>
+    <div class="cat-grid">
+
+      <!-- CARD 1: Soda · 2 rotativos -->
+      <div class="style-card">
+        <div class="style-preview" style="position:relative;overflow:hidden;height:380px;cursor:default;">
+          <div style="position:absolute;inset:0;">
+            <iframe src="https://menudigitalpro.github.io/menudigitalpro/menu-googlesite.html"
+              id="frame-soda-0"
+              style="width:200%;height:200%;transform:scale(0.5);transform-origin:top left;border:none;pointer-events:none;position:absolute;top:0;left:0;opacity:1;transition:opacity 0.8s ease;"
+              loading="lazy" tabindex="-1"></iframe>
+            <iframe src="https://menudigitalpro.github.io/menudigitalpro/menu-soda.html"
+              id="frame-soda-1"
+              style="width:200%;height:200%;transform:scale(0.5);transform-origin:top left;border:none;pointer-events:none;position:absolute;top:0;left:0;opacity:0;transition:opacity 0.8s ease;"
+              loading="lazy" tabindex="-1"></iframe>
+          </div>
+          <div class="preview-overlay"></div>
+          <div style="position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:10;">
+            <div id="dot-soda-0" style="width:6px;height:6px;border-radius:50%;background:white;opacity:1;transition:opacity 0.3s;"></div>
+            <div id="dot-soda-1" style="width:6px;height:6px;border-radius:50%;background:white;opacity:0.3;transition:opacity 0.3s;"></div>
+          </div>
+        </div>
+        <div class="style-info">
+          <span class="style-tag tag-available">✓ Disponible · 2 estilos</span>
+          <div class="style-name">Estilo Soda / Comida Típica</div>
+          <div class="style-desc">Dos variantes: clásica verde con toques dorados y versión callejera vibrante con panel admin. Ideal para sodas y comida típica costarricense.</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;">
+            <button class="style-btn" onclick="window.open('https://menudigitalpro.github.io/menudigitalpro/menu-googlesite.html','_blank')">🍃 Clásica →</button>
+            <button class="style-btn" onclick="window.open('https://menudigitalpro.github.io/menudigitalpro/menu-soda.html','_blank')">🌮 Callejera →</button>
+          </div>
+        </div>
       </div>
-      <div class="style-info">
-        <span class="style-tag tag-available">✓ Disponible</span>
-        <div class="style-name">Estilo Pizzería</div>
-        <div class="style-desc">Rojo y negro artesanal con tipografía italiana. Horno de leña, masa madre y ambiente cálido. Perfecto para pizzerías, restaurantes italianos y tratorías.</div>
-        <button class="style-btn">Ver Demo Completo →</button>
+
+      <!-- CARD 2: Japonés Sakura -->
+      <div class="style-card" onclick="window.open('https://menudigitalpro.github.io/menudigitalpro/menu-japones.html','_blank')">
+        <div class="style-preview">
+          <iframe src="https://menudigitalpro.github.io/menudigitalpro/menu-japones.html" loading="lazy" tabindex="-1"></iframe>
+          <div class="preview-overlay"></div>
+        </div>
+        <div class="style-info">
+          <span class="style-tag tag-available">✓ Disponible</span>
+          <div class="style-name">Estilo Japonés — Sakura</div>
+          <div class="style-desc">Negro profundo con rojo y dorado. Kanji decorativos y pétalos animados. Ideal para sushi, ramen y cocina asiática.</div>
+          <button class="style-btn">Ver Demo →</button>
+        </div>
       </div>
+
+      <!-- CARD 3: Izakaya -->
+      <div class="style-card" onclick="window.open('https://menudigitalpro.github.io/menudigitalpro/menu-izakaya.html','_blank')">
+        <div class="style-preview">
+          <iframe src="https://menudigitalpro.github.io/menudigitalpro/menu-izakaya.html" loading="lazy" tabindex="-1"></iframe>
+          <div class="preview-overlay"></div>
+        </div>
+        <div class="style-info">
+          <span class="style-tag tag-available">✓ Disponible</span>
+          <div class="style-name">Estilo Izakaya — Kuro</div>
+          <div class="style-desc">Bar nocturno japonés. Azul índigo con ámbar sake y farolillos animados. Para izakayas, ramen bars y restaurantes asiáticos modernos.</div>
+          <button class="style-btn">Ver Demo →</button>
+        </div>
+      </div>
+
+      <!-- CARD 4: Gourmet · 2 rotativos -->
+      <div class="style-card">
+        <div class="style-preview" style="position:relative;overflow:hidden;height:380px;cursor:default;">
+          <div style="position:absolute;inset:0;">
+            <iframe src="https://menudigitalpro.github.io/menudigitalpro/menu-gourmet.html"
+              id="frame-gourmet-0"
+              style="width:200%;height:200%;transform:scale(0.5);transform-origin:top left;border:none;pointer-events:none;position:absolute;top:0;left:0;opacity:1;transition:opacity 0.8s ease;"
+              loading="lazy" tabindex="-1"></iframe>
+            <iframe src="https://menudigitalpro.github.io/menudigitalpro/menu-luxury.html"
+              id="frame-gourmet-1"
+              style="width:200%;height:200%;transform:scale(0.5);transform-origin:top left;border:none;pointer-events:none;position:absolute;top:0;left:0;opacity:0;transition:opacity 0.8s ease;"
+              loading="lazy" tabindex="-1"></iframe>
+          </div>
+          <div class="preview-overlay"></div>
+          <div style="position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:10;">
+            <div id="dot-gourmet-0" style="width:6px;height:6px;border-radius:50%;background:white;opacity:1;transition:opacity 0.3s;"></div>
+            <div id="dot-gourmet-1" style="width:6px;height:6px;border-radius:50%;background:white;opacity:0.3;transition:opacity 0.3s;"></div>
+          </div>
+        </div>
+        <div class="style-info">
+          <span class="style-tag tag-available">✓ Disponible · 2 estilos</span>
+          <div class="style-name">Estilo Gourmet / Fine Dining</div>
+          <div class="style-desc">Dos variantes: gourmet azul marino con dorado y versión luxury cinematográfica de pantalla completa. Para restaurantes de autor y haute cuisine.</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;">
+            <button class="style-btn" onclick="window.open('https://menudigitalpro.github.io/menudigitalpro/menu-gourmet.html','_blank')">🍷 Gourmet →</button>
+            <button class="style-btn" onclick="window.open('https://menudigitalpro.github.io/menudigitalpro/menu-luxury.html','_blank')">✦ Luxury →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 5: Urbano -->
+      <div class="style-card" onclick="window.open('https://menudigitalpro.github.io/menudigitalpro/menu-urbano.html','_blank')">
+        <div class="style-preview">
+          <iframe src="https://menudigitalpro.github.io/menudigitalpro/menu-urbano.html" loading="lazy" tabindex="-1"></iframe>
+          <div class="preview-overlay"></div>
+        </div>
+        <div class="style-info">
+          <span class="style-tag tag-available">✓ Disponible</span>
+          <div class="style-name">Estilo Urbano</div>
+          <div class="style-desc">Vibrante y juvenil. Morados y neones sobre fondo oscuro. Para hamburgueserías, tacos, comida rápida gourmet y street food.</div>
+          <button class="style-btn">Ver Demo →</button>
+        </div>
+      </div>
+
+      <!-- CARD 6: Café -->
+      <div class="style-card" onclick="window.open('https://menudigitalpro.github.io/menudigitalpro/menu-cafe.html','_blank')">
+        <div class="style-preview">
+          <iframe src="https://menudigitalpro.github.io/menudigitalpro/menu-cafe.html" loading="lazy" tabindex="-1"></iframe>
+          <div class="preview-overlay"></div>
+        </div>
+        <div class="style-info">
+          <span class="style-tag tag-available">✓ Disponible</span>
+          <div class="style-name">Estilo Café</div>
+          <div class="style-desc">Cálido, artesanal y acogedor. Cremas y cafés con serif elegante. Para cafeterías, panaderías, pastelerías y brunch.</div>
+          <button class="style-btn">Ver Demo →</button>
+        </div>
+      </div>
+
+      <!-- CARD 7: Orgánico -->
+      <div class="style-card" onclick="window.open('https://menudigitalpro.github.io/menudigitalpro/menu-organico.html','_blank')">
+        <div class="style-preview">
+          <iframe src="https://menudigitalpro.github.io/menudigitalpro/menu-organico.html" loading="lazy" tabindex="-1"></iframe>
+          <div class="preview-overlay"></div>
+        </div>
+        <div class="style-info">
+          <span class="style-tag tag-available">✓ Disponible</span>
+          <div class="style-name">Estilo Orgánico</div>
+          <div class="style-desc">Natural, fresco y saludable. Verdes profundos con texturas orgánicas. Para vegetarianos, veganos y comida saludable.</div>
+          <button class="style-btn">Ver Demo →</button>
+        </div>
+      </div>
+
+      <!-- CARD 8: Pizzería -->
+      <div class="style-card" onclick="window.open('https://menudigitalpro.github.io/menudigitalpro/menu-pizzeria-cr.html','_blank')">
+        <div class="style-preview">
+          <iframe src="https://menudigitalpro.github.io/menudigitalpro/menu-pizzeria-cr.html" loading="lazy" tabindex="-1"></iframe>
+          <div class="preview-overlay"></div>
+        </div>
+        <div class="style-info">
+          <span class="style-tag tag-available">✓ Disponible</span>
+          <div class="style-name">Estilo Pizzería</div>
+          <div class="style-desc">Rojo y negro artesanal con tipografía italiana. Perfecto para pizzerías, restaurantes italianos y tratorías.</div>
+          <button class="style-btn">Ver Demo →</button>
+        </div>
+      </div>
+
+      <!-- CARD 9: Dulcería · 2 rotativos -->
+      <div class="style-card">
+        <div class="style-preview" style="position:relative;overflow:hidden;height:380px;cursor:default;">
+          <div style="position:absolute;inset:0;">
+            <iframe src="https://menudigitalpro.github.io/menudigitalpro/menu-dulceria-cr.html"
+              id="frame-dulceria-0"
+              style="width:200%;height:200%;transform:scale(0.5);transform-origin:top left;border:none;pointer-events:none;position:absolute;top:0;left:0;opacity:1;transition:opacity 0.8s ease;"
+              loading="lazy" tabindex="-1"></iframe>
+            <iframe src="https://menudigitalpro.github.io/menudigitalpro/menu-dulceria-tech-cr.html"
+              id="frame-dulceria-1"
+              style="width:200%;height:200%;transform:scale(0.5);transform-origin:top left;border:none;pointer-events:none;position:absolute;top:0;left:0;opacity:0;transition:opacity 0.8s ease;"
+              loading="lazy" tabindex="-1"></iframe>
+          </div>
+          <div class="preview-overlay"></div>
+          <div style="position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:10;">
+            <div id="dot-dulceria-0" style="width:6px;height:6px;border-radius:50%;background:white;opacity:1;transition:opacity 0.3s;"></div>
+            <div id="dot-dulceria-1" style="width:6px;height:6px;border-radius:50%;background:white;opacity:0.3;transition:opacity 0.3s;"></div>
+          </div>
+        </div>
+        <div class="style-info">
+          <span class="style-tag tag-available">✓ Disponible · 2 estilos</span>
+          <div class="style-name">Estilo Dulcería</div>
+          <div class="style-desc">Dos variantes: artesanal rosado cálido y tech neón vibrante. Para dulcerías, reposterías, pastelerías y tiendas de postres.</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;">
+            <button class="style-btn" onclick="window.open('https://menudigitalpro.github.io/menudigitalpro/menu-dulceria-cr.html','_blank')">🌸 Artesanal →</button>
+            <button class="style-btn" onclick="window.open('https://menudigitalpro.github.io/menudigitalpro/menu-dulceria-tech-cr.html','_blank')">⚡ Tech →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 10: Korean Coming Soon -->
+      <div class="style-card">
+        <div class="style-preview" style="background:linear-gradient(135deg,#0a0a1a,#15153D);">
+          <div class="coming-soon">
+            <div class="cs-emoji">🥩</div>
+            <div class="cs-label">Korean BBQ</div>
+            <div class="cs-sublabel">Próximamente</div>
+          </div>
+        </div>
+        <div class="style-info">
+          <span class="style-tag tag-soon">⏳ Próximamente</span>
+          <div class="style-name">Estilo Korean BBQ</div>
+          <div class="style-desc">Moderno y atrevido. Azul marino con rojo coreano y tipografía bold. Perfecto para Korean BBQ, chicken coreano y street food asiático.</div>
+          <button class="style-btn disabled">Próximamente</button>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /panel-menus -->
+
+
+  <!-- ══════════════════════════════════════
+       TAB 2 — PÁGINAS WEB
+  ══════════════════════════════════════ -->
+  <div class="tab-panel" id="panel-web">
+    <div class="section-intro">
+      <div class="section-intro-title">Páginas web <em>completas</em></div>
+      <p class="section-intro-desc">Sitios web profesionales de una sola página para mostrar tu negocio, atraer clientes nuevos y recibir consultas. Con formularios, galería, mapa y más.</p>
+    </div>
+    <div class="cat-grid">
+
+      <!-- WEB 1: Restaurante La Leña -->
+      <div class="web-card" onclick="window.open('sitio-restaurante.html','_blank')">
+        <div class="web-preview">
+          <iframe src="sitio-restaurante.html" loading="lazy" tabindex="-1"></iframe>
+          <div class="preview-overlay"></div>
+        </div>
+        <div class="web-info">
+          <span class="style-tag tag-web">🌐 Página Web Completa</span>
+          <div class="style-name">Demo Restaurante — La Leña</div>
+          <div class="style-desc">Sitio completo para restaurantes. Estética editorial cálida. Carta con pestañas, formulario de reservaciones, galería, testimonios, mapa y footer completo.</div>
+          <div class="web-features">
+            <span class="web-feature">Hero animado</span>
+            <span class="web-feature">Carta / Menú</span>
+            <span class="web-feature">Reservaciones</span>
+            <span class="web-feature">Galería</span>
+            <span class="web-feature">Testimonios</span>
+            <span class="web-feature">Ubicación</span>
+            <span class="web-feature">Responsive</span>
+          </div>
+          <button class="style-btn blue">Ver Demo Completo →</button>
+        </div>
+      </div>
+
+      <!-- WEB 2: Boutique Índigo -->
+      <div class="web-card" onclick="window.open('sitio-boutique.html','_blank')">
+        <div class="web-preview">
+          <iframe src="sitio-boutique.html" loading="lazy" tabindex="-1"></iframe>
+          <div class="preview-overlay"></div>
+        </div>
+        <div class="web-info">
+          <span class="style-tag tag-web">🌐 Página Web Completa</span>
+          <div class="style-name">Demo Boutique — Índigo</div>
+          <div class="style-desc">Sitio completo para tiendas y boutiques. Catálogo con filtros por categoría, carrito funcional, modal de producto con tallas, colores y wishlist.</div>
+          <div class="web-features">
+            <span class="web-feature">Catálogo + filtros</span>
+            <span class="web-feature">Carrito funcional</span>
+            <span class="web-feature">Modal de producto</span>
+            <span class="web-feature">Wishlist</span>
+            <span class="web-feature">Newsletter</span>
+            <span class="web-feature">WhatsApp</span>
+            <span class="web-feature">Responsive</span>
+          </div>
+          <button class="style-btn blue">Ver Demo Completo →</button>
+        </div>
+      </div>
+
+      <!-- WEB 3: Coming Soon -->
+      <div class="web-card" style="opacity:0.45;pointer-events:none;">
+        <div class="web-preview" style="background:linear-gradient(135deg,#0A0F1A,#10182A);">
+          <div class="coming-soon">
+            <div class="cs-emoji">💈</div>
+            <div class="cs-label">Barbería / Salón</div>
+            <div class="cs-sublabel">Próximamente</div>
+          </div>
+        </div>
+        <div class="web-info">
+          <span class="style-tag tag-soon">⏳ Próximamente</span>
+          <div class="style-name">Demo Barbería / Salón</div>
+          <div class="style-desc">Sitio web para barberías, salones y spas. Reserva de citas, servicios con precios, galería de trabajos y reseñas.</div>
+          <div class="web-features">
+            <span class="web-feature">Reserva de citas</span>
+            <span class="web-feature">Servicios</span>
+            <span class="web-feature">Galería</span>
+          </div>
+          <button class="style-btn disabled">Próximamente</button>
+        </div>
+      </div>
+
+    </div>
+    <div style="text-align:center;padding:0 2rem 3rem;max-width:600px;margin:0 auto;">
+      <p style="font-size:0.78rem;color:rgba(245,240,232,0.25);line-height:1.7;">
+        💡 Cada página se adapta completamente al negocio: nombre, colores, contenido, fotos y contacto. Consultá precio y disponibilidad por WhatsApp.
+      </p>
+    </div>
+  </div><!-- /panel-web -->
+
+
+  <!-- ══════════════════════════════════════
+       TAB 3 — INVENTARIO / POS
+  ══════════════════════════════════════ -->
+  <div class="tab-panel" id="panel-inventario">
+    <div class="section-intro">
+      <div class="section-intro-title">Control total de tu <em>negocio</em></div>
+      <p class="section-intro-desc">Sistema de inventario y punto de venta (POS) completo, directo desde el navegador. Sin instalaciones ni software costoso.</p>
+    </div>
+    <div class="cat-grid" style="max-width:900px;">
+
+      <!-- INV 1: Demo -->
+      <div class="inv-card" onclick="window.open('https://menudigitalpro.github.io/INVENTARIO/','_blank')">
+        <div class="inv-preview">
+          <iframe src="https://menudigitalpro.github.io/INVENTARIO/" loading="lazy" tabindex="-1"></iframe>
+          <div class="preview-overlay"></div>
+        </div>
+        <div class="inv-info">
+          <span class="style-tag tag-inv">📦 Sistema Completo · Disponible</span>
+          <div class="style-name">InventarioPro</div>
+          <div class="style-desc">Sistema de inventario y caja completo para negocios pequeños y medianos. POS con scanner, historial de ventas, cierre de caja, reportes y más. Todo en colones ₡.</div>
+          <div class="inv-features">
+            <span class="inv-feature">POS / Caja</span>
+            <span class="inv-feature">Scanner de barras</span>
+            <span class="inv-feature">Gestión de stock</span>
+            <span class="inv-feature">Historial ventas</span>
+            <span class="inv-feature">Cierre de caja</span>
+            <span class="inv-feature">Exportar CSV</span>
+            <span class="inv-feature">Multi-usuario</span>
+            <span class="inv-feature">Tickets imprimibles</span>
+            <span class="inv-feature">Colones ₡</span>
+          </div>
+          <button class="style-btn green">Ver Demo del Sistema →</button>
+        </div>
+      </div>
+
+      <!-- INV 2: Para quién / Precios -->
+      <div class="inv-card" style="cursor:default;">
+        <div class="inv-preview" style="background:linear-gradient(135deg,#050F08,#0A1C0F);">
+          <div class="coming-soon" style="padding:1.5rem;gap:1rem;">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem;width:100%;">
+              <div style="background:rgba(111,207,151,0.08);border:1px solid rgba(111,207,151,0.15);border-radius:8px;padding:1rem;text-align:center;">
+                <div style="font-size:1.4rem;margin-bottom:0.25rem">🛒</div>
+                <div style="font-size:0.62rem;color:#6FCF97;letter-spacing:0.1em;text-transform:uppercase;">POS</div>
+                <div style="font-size:0.68rem;color:rgba(245,240,232,0.3);margin-top:0.15rem;">Cobrar con facilidad</div>
+              </div>
+              <div style="background:rgba(111,207,151,0.08);border:1px solid rgba(111,207,151,0.15);border-radius:8px;padding:1rem;text-align:center;">
+                <div style="font-size:1.4rem;margin-bottom:0.25rem">📊</div>
+                <div style="font-size:0.62rem;color:#6FCF97;letter-spacing:0.1em;text-transform:uppercase;">Reportes</div>
+                <div style="font-size:0.68rem;color:rgba(245,240,232,0.3);margin-top:0.15rem;">Ventas diarias/mes</div>
+              </div>
+              <div style="background:rgba(111,207,151,0.08);border:1px solid rgba(111,207,151,0.15);border-radius:8px;padding:1rem;text-align:center;">
+                <div style="font-size:1.4rem;margin-bottom:0.25rem">🏷️</div>
+                <div style="font-size:0.62rem;color:#6FCF97;letter-spacing:0.1em;text-transform:uppercase;">Inventario</div>
+                <div style="font-size:0.68rem;color:rgba(245,240,232,0.3);margin-top:0.15rem;">Stock en tiempo real</div>
+              </div>
+              <div style="background:rgba(111,207,151,0.08);border:1px solid rgba(111,207,151,0.15);border-radius:8px;padding:1rem;text-align:center;">
+                <div style="font-size:1.4rem;margin-bottom:0.25rem">🧾</div>
+                <div style="font-size:0.62rem;color:#6FCF97;letter-spacing:0.1em;text-transform:uppercase;">Tickets</div>
+                <div style="font-size:0.68rem;color:rgba(245,240,232,0.3);margin-top:0.15rem;">Imprimibles al instante</div>
+              </div>
+            </div>
+            <div style="font-size:0.68rem;color:rgba(245,240,232,0.2);text-align:center;">
+              Funciona en tablet, computadora o teléfono
+            </div>
+          </div>
+        </div>
+        <div class="inv-info">
+          <span class="style-tag tag-inv">✓ ¿Para quién es?</span>
+          <div class="style-name">Para cualquier negocio</div>
+          <div class="style-desc">Pulperías, tiendas de ropa, sodas, ferreterías, minisupers, boutiques y más. Controlá tu inventario y ventas sin pagar sistemas costosos.</div>
+          <div class="inv-features">
+            <span class="inv-feature">Pulperías</span>
+            <span class="inv-feature">Tiendas de ropa</span>
+            <span class="inv-feature">Sodas</span>
+            <span class="inv-feature">Ferreterías</span>
+            <span class="inv-feature">Minisupers</span>
+            <span class="inv-feature">Boutiques</span>
+          </div>
+          <button class="style-btn green" onclick="window.open('https://wa.me/50671186158','_blank')">Consultar precio →</button>
+        </div>
+      </div>
+
     </div>
 
-    <!-- CARD 8: Dulcería Available (2 estilos) -->
-    <div class="style-card">
-      <div class="style-preview" style="position:relative; overflow:hidden; height:380px; cursor:default;">
-        <div style="position:absolute;inset:0;">
-          <iframe
-            src="https://menudigitalpro.github.io/menudigitalpro/menu-dulceria-cr.html"
-            id="frame-dulceria-0"
-            style="width:200%;height:200%;transform:scale(0.5);transform-origin:top left;border:none;pointer-events:none;position:absolute;top:0;left:0;opacity:1;transition:opacity 0.8s ease;"
-            loading="lazy" tabindex="-1"></iframe>
-          <iframe
-            src="https://menudigitalpro.github.io/menudigitalpro/menu-dulceria-tech-cr.html"
-            id="frame-dulceria-1"
-            style="width:200%;height:200%;transform:scale(0.5);transform-origin:top left;border:none;pointer-events:none;position:absolute;top:0;left:0;opacity:0;transition:opacity 0.8s ease;"
-            loading="lazy" tabindex="-1"></iframe>
-        </div>
-        <div class="preview-overlay"></div>
-        <!-- Dots -->
-        <div style="position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:10;">
-          <div id="dot-dulceria-0" style="width:6px;height:6px;border-radius:50%;background:white;opacity:1;transition:opacity 0.3s;"></div>
-          <div id="dot-dulceria-1" style="width:6px;height:6px;border-radius:50%;background:white;opacity:0.3;transition:opacity 0.3s;"></div>
-        </div>
-      </div>
-      <div class="style-info">
-        <span class="style-tag tag-available">✓ Disponible · 2 estilos</span>
-        <div class="style-name">Estilo Dulcería</div>
-        <div class="style-desc">Dos variantes: artesanal rosado cálido y tech neón vibrante. Ideal para dulcerías, reposterías, pastelerías y tiendas de postres.</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-top:0.5rem;">
-          <button class="style-btn" onclick="window.open('https://menudigitalpro.github.io/menudigitalpro/menu-dulceria-cr.html','_blank')">🌸 Artesanal →</button>
-          <button class="style-btn" onclick="window.open('https://menudigitalpro.github.io/menudigitalpro/menu-dulceria-tech-cr.html','_blank')">⚡ Tech →</button>
-        </div>
-      </div>
-    </div>
+  </div><!-- /panel-inventario -->
 
-    <!-- CARD 9: Thai/Asian Coming Soon -->
-    <div class="style-card">
-      <div class="style-preview" style="background: linear-gradient(135deg, #1a0f00, #2d1a00);">
-        <div class="coming-soon">
-          <div class="cs-emoji">🍜</div>
-          <div class="cs-label">Thai & Asian Fusion</div>
-          <div class="cs-sublabel">Próximamente</div>
-        </div>
-      </div>
-      <div class="style-info">
-        <span class="style-tag tag-soon">⏳ Próximamente</span>
-        <div class="style-name">Estilo Thai Fusion</div>
-        <div class="style-desc">Naranja vibrante y dorado tropical. Patrones geométricos asiáticos. Para restaurantes tailandeses, vietnamitas, chinos y fusión asiática.</div>
-        <button class="style-btn disabled">Próximamente</button>
-      </div>
-    </div>
-
-    <!-- CARD 10: Korean Coming Soon -->
-    <div class="style-card">
-      <div class="style-preview" style="background: linear-gradient(135deg, #0a0a1a, #15153D);">
-        <div class="coming-soon">
-          <div class="cs-emoji">🥩</div>
-          <div class="cs-label">Korean BBQ</div>
-          <div class="cs-sublabel">Próximamente</div>
-        </div>
-      </div>
-      <div class="style-info">
-        <span class="style-tag tag-soon">⏳ Próximamente</span>
-        <div class="style-name">Estilo Korean BBQ</div>
-        <div class="style-desc">Moderno y atrevido. Azul marino con rojo coreano y tipografía bold. Perfecto para Korean BBQ, chicken frito coreano y street food asiático.</div>
-        <button class="style-btn disabled">Próximamente</button>
-      </div>
-    </div>
-
-  </div><!-- /cat-grid -->
 
   <!-- BOTTOM CTA -->
-  <div style="text-align:center; padding: 2rem; background: rgba(201,168,76,0.05); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
-    <div style="font-family:'Cormorant Garamond',serif; font-size:1.6rem; color:var(--cream); margin-bottom:0.5rem;">¿No encontrás el estilo que buscás?</div>
-    <p style="color:rgba(245,240,232,0.5); font-size:0.9rem; margin-bottom:1.5rem;">Escribinos y creamos un estilo personalizado para tu negocio.</p>
-    <button class="cat-cta" onclick="window.open('https://wa.me/50671186158','_blank')">Hablemos por WhatsApp</button>
+  <div class="bottom-cta">
+    <div class="bottom-cta-title">¿No encontrás lo que buscás?</div>
+    <p>Escribinos y lo resolvemos. Creamos soluciones personalizadas para cualquier tipo de negocio.</p>
+    <button class="cat-cta" onclick="window.open('https://wa.me/50671186158','_blank')">💬 Hablemos por WhatsApp</button>
   </div>
 
   <!-- FOOTER -->
@@ -403,26 +683,28 @@
     <p>© 2026 <span>MenúDigitalPro</span> · Hecho en Costa Rica 🇨🇷</p>
   </div>
 
-
   <script>
+    function switchTab(name, btn) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('panel-' + name).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
     function makeSlider(id, interval) {
-      var frames = [
-        document.getElementById('frame-' + id + '-0'),
-        document.getElementById('frame-' + id + '-1')
-      ];
-      var dots = [
-        document.getElementById('dot-' + id + '-0'),
-        document.getElementById('dot-' + id + '-1')
-      ];
-      var current = 0;
-      function next() {
-        frames[current].style.opacity = '0';
-        dots[current].style.opacity = '0.3';
-        current = (current + 1) % frames.length;
-        frames[current].style.opacity = '1';
-        dots[current].style.opacity = '1';
-      }
-      setInterval(next, interval);
+      var f0 = document.getElementById('frame-' + id + '-0');
+      var f1 = document.getElementById('frame-' + id + '-1');
+      var d0 = document.getElementById('dot-' + id + '-0');
+      var d1 = document.getElementById('dot-' + id + '-1');
+      if (!f0 || !f1) return;
+      var cur = 0;
+      var frames = [f0, f1], dots = [d0, d1];
+      setInterval(function() {
+        frames[cur].style.opacity = '0'; dots[cur].style.opacity = '0.3';
+        cur = (cur + 1) % 2;
+        frames[cur].style.opacity = '1'; dots[cur].style.opacity = '1';
+      }, interval);
     }
     makeSlider('dulceria', 2500);
     makeSlider('soda',     3200);
