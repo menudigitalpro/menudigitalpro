@@ -1,0 +1,1467 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Obsidian — Haute Cuisine</title>
+<link href="https://fonts.googleapis.com/css2?family=Tenor+Sans&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --obsidian:#07070A;
+  --void:#0D0D12;
+  --surface:#111118;
+  --panel:#16161F;
+  --gold:#C9A84C;
+  --gold2:#E8CC7A;
+  --gold3:#F5E4A8;
+  --gold-dim:rgba(201,168,76,0.15);
+  --cream:#F0EBE0;
+  --mist:rgba(240,235,224,0.55);
+  --faint:rgba(240,235,224,0.25);
+  --ghost:rgba(240,235,224,0.08);
+  --border:rgba(201,168,76,0.12);
+  --border2:rgba(201,168,76,0.22);
+}
+html{scroll-behavior:smooth;background:var(--obsidian);cursor:none}
+body{font-family:'Jost',sans-serif;background:var(--obsidian);color:var(--cream);overflow-x:hidden;line-height:1}
+
+/* ── CUSTOM CURSOR ── */
+.cursor{
+  position:fixed;width:8px;height:8px;border-radius:50%;
+  background:var(--gold);pointer-events:none;z-index:9999;
+  transform:translate(-50%,-50%);
+  transition:width 0.3s,height 0.3s,background 0.3s;
+  mix-blend-mode:difference;
+}
+.cursor-ring{
+  position:fixed;width:36px;height:36px;border-radius:50%;
+  border:1px solid rgba(201,168,76,0.4);pointer-events:none;z-index:9998;
+  transform:translate(-50%,-50%);
+  transition:transform 0.12s ease,width 0.3s,height 0.3s,border-color 0.3s;
+}
+.cursor.hover{width:16px;height:16px;background:var(--gold2)}
+.cursor-ring.hover{width:56px;height:56px;border-color:rgba(201,168,76,0.7)}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:var(--obsidian)}
+::-webkit-scrollbar-thumb{background:var(--gold);border-radius:2px}
+
+/* ── HERO ── */
+.hero{
+  position:relative;min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+
+/* Aurora canvas bg */
+#auroraCanvas{
+  position:absolute;inset:0;width:100%;height:100%;
+  opacity:0.65;
+}
+
+/* Grain overlay */
+.hero::after{
+  content:'';position:absolute;inset:0;z-index:1;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  background-size:256px;pointer-events:none;
+}
+
+/* Decorative corner lines */
+.hero-corner{
+  position:absolute;z-index:2;width:80px;height:80px;
+  opacity:0;animation:cornerFade 1.5s 1.8s ease forwards;
+}
+.hero-corner.tl{top:2rem;left:2rem;border-top:1px solid var(--gold);border-left:1px solid var(--gold)}
+.hero-corner.tr{top:2rem;right:2rem;border-top:1px solid var(--gold);border-right:1px solid var(--gold)}
+.hero-corner.bl{bottom:2rem;left:2rem;border-bottom:1px solid var(--gold);border-left:1px solid var(--gold)}
+.hero-corner.br{bottom:2rem;right:2rem;border-bottom:1px solid var(--gold);border-right:1px solid var(--gold)}
+@keyframes cornerFade{from{opacity:0;transform:scale(0.7)}to{opacity:1;transform:scale(1)}}
+
+.hero-content{
+  position:relative;z-index:3;text-align:center;padding:2rem;
+  max-width:900px;
+}
+.hero-pre{
+  font-size:0.62rem;letter-spacing:0.55em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:2rem;
+  opacity:0;animation:fadeUp 1s 0.3s ease forwards;
+  display:flex;align-items:center;gap:1.2rem;justify-content:center;
+}
+.hero-pre::before,.hero-pre::after{
+  content:'';display:block;height:1px;width:40px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+}
+.hero-logo{
+  font-family:'Libre Baskerville',serif;
+  font-size:clamp(4rem,12vw,10rem);
+  font-weight:400;line-height:0.9;
+  color:var(--cream);letter-spacing:0.08em;
+  opacity:0;animation:logoReveal 1.4s 0.6s cubic-bezier(0.16,1,0.3,1) forwards;
+  position:relative;
+}
+.hero-logo .stroke{
+  -webkit-text-stroke:1px var(--cream);
+  color:transparent;
+  font-style:italic;
+}
+@keyframes logoReveal{
+  from{opacity:0;transform:translateY(60px) skewY(3deg);filter:blur(12px)}
+  to{opacity:1;transform:translateY(0) skewY(0);filter:blur(0)}
+}
+.hero-tagline{
+  font-family:'Libre Baskerville',serif;
+  font-size:clamp(0.85rem,2vw,1.1rem);
+  font-style:italic;font-weight:400;
+  color:var(--faint);letter-spacing:0.2em;
+  margin-top:1.5rem;
+  opacity:0;animation:fadeUp 1s 1.1s ease forwards;
+}
+.hero-divider{
+  width:1px;height:60px;background:linear-gradient(180deg,transparent,var(--gold),transparent);
+  margin:2.5rem auto;
+  opacity:0;animation:fadeIn 1s 1.4s ease forwards;
+}
+.hero-btns{
+  display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;
+  opacity:0;animation:fadeUp 1s 1.6s ease forwards;
+}
+.btn-gold{
+  padding:0.9rem 2.4rem;background:transparent;
+  border:1px solid var(--gold);color:var(--gold);
+  font-family:'Jost',sans-serif;font-size:0.72rem;
+  letter-spacing:0.25em;text-transform:uppercase;
+  cursor:pointer;text-decoration:none;display:inline-block;
+  position:relative;overflow:hidden;
+  transition:color 0.4s;
+}
+.btn-gold::before{
+  content:'';position:absolute;inset:0;
+  background:var(--gold);transform:translateX(-101%);
+  transition:transform 0.4s cubic-bezier(0.16,1,0.3,1);
+}
+.btn-gold:hover{color:var(--obsidian)}
+.btn-gold:hover::before{transform:translateX(0)}
+.btn-gold span{position:relative;z-index:1}
+.btn-ghost{
+  padding:0.9rem 2.4rem;background:transparent;
+  border:1px solid rgba(240,235,224,0.12);
+  color:var(--faint);font-family:'Jost',sans-serif;
+  font-size:0.72rem;letter-spacing:0.25em;text-transform:uppercase;
+  cursor:pointer;text-decoration:none;display:inline-block;
+  transition:border-color 0.3s,color 0.3s;
+}
+.btn-ghost:hover{border-color:rgba(240,235,224,0.35);color:var(--cream)}
+
+/* Scroll indicator */
+.hero-scroll{
+  position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);
+  z-index:3;display:flex;flex-direction:column;align-items:center;gap:0.5rem;
+  opacity:0;animation:fadeIn 1s 2.2s ease forwards;cursor:pointer;
+}
+.scroll-line{
+  width:1px;height:50px;overflow:hidden;position:relative;
+}
+.scroll-line::after{
+  content:'';position:absolute;top:-100%;left:0;
+  width:100%;height:100%;
+  background:linear-gradient(180deg,transparent,var(--gold),transparent);
+  animation:scrollDrop 2s 2.5s ease infinite;
+}
+@keyframes scrollDrop{0%{top:-100%}100%{top:200%}}
+.scroll-text{
+  font-size:0.55rem;letter-spacing:0.35em;text-transform:uppercase;
+  color:rgba(201,168,76,0.4);writing-mode:vertical-lr;
+}
+
+/* ── NAVBAR ── */
+.navbar{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:1.8rem 4rem;
+  display:flex;align-items:center;justify-content:space-between;
+  transition:all 0.5s;
+}
+.navbar.scrolled{
+  background:rgba(7,7,10,0.95);
+  backdrop-filter:blur(20px);
+  padding:1.1rem 4rem;
+  border-bottom:1px solid var(--border);
+}
+.nav-logo{
+  font-family:'Libre Baskerville',serif;
+  font-size:1.1rem;letter-spacing:0.2em;
+  color:var(--cream);text-decoration:none;
+  font-style:italic;
+}
+.nav-links{display:flex;gap:3rem;list-style:none}
+.nav-links a{
+  font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--faint);text-decoration:none;
+  transition:color 0.3s;position:relative;
+}
+.nav-links a::after{
+  content:'';position:absolute;bottom:-4px;left:0;right:0;
+  height:1px;background:var(--gold);
+  transform:scaleX(0);transition:transform 0.3s;
+}
+.nav-links a:hover{color:var(--cream)}
+.nav-links a:hover::after{transform:scaleX(1)}
+.nav-reserve{
+  font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;
+  padding:0.55rem 1.4rem;border:1px solid var(--border2);
+  color:var(--gold);background:none;cursor:pointer;
+  transition:all 0.3s;text-decoration:none;
+}
+.nav-reserve:hover{background:var(--gold);color:var(--obsidian);border-color:var(--gold)}
+.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer}
+.hamburger span{display:block;width:22px;height:1px;background:var(--cream);transition:all 0.3s}
+
+/* ── SECTIONS ── */
+section{padding:8rem 2rem;position:relative}
+.container{max-width:1200px;margin:0 auto}
+
+/* reveal */
+.reveal{opacity:0;transform:translateY(40px);transition:all 0.9s cubic-bezier(0.16,1,0.3,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-left{opacity:0;transform:translateX(-50px);transition:all 0.9s cubic-bezier(0.16,1,0.3,1)}
+.reveal-left.visible{opacity:1;transform:translateX(0)}
+.reveal-right{opacity:0;transform:translateX(50px);transition:all 0.9s cubic-bezier(0.16,1,0.3,1)}
+.reveal-right.visible{opacity:1;transform:translateX(0)}
+
+/* section labels */
+.sec-num{
+  font-size:0.58rem;letter-spacing:0.4em;text-transform:uppercase;
+  color:rgba(201,168,76,0.4);margin-bottom:0.8rem;
+  display:flex;align-items:center;gap:1rem;
+}
+.sec-num::after{
+  content:'';display:block;height:1px;width:30px;
+  background:var(--gold);opacity:0.4;
+}
+.sec-title{
+  font-family:'Libre Baskerville',serif;
+  font-size:clamp(2.2rem,5vw,4rem);
+  font-weight:400;line-height:1.05;color:var(--cream);
+}
+.sec-title em{font-style:italic;color:var(--gold)}
+.sec-sub{
+  font-size:0.85rem;color:var(--faint);
+  line-height:1.9;max-width:500px;margin-top:1.2rem;
+  font-family:'Jost',sans-serif;font-weight:300;
+}
+
+/* ── MANIFESTO ── */
+.manifesto{
+  background:var(--void);
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  padding:7rem 2rem;text-align:center;
+  position:relative;overflow:hidden;
+}
+.manifesto::before{
+  content:'';position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(circle,rgba(201,168,76,0.04) 0%,transparent 70%);
+}
+.manifesto-text{
+  font-family:'Libre Baskerville',serif;
+  font-size:clamp(1.5rem,4vw,2.8rem);
+  font-weight:400;font-style:italic;
+  color:var(--cream);line-height:1.5;
+  max-width:800px;margin:0 auto;
+  position:relative;z-index:1;
+}
+.manifesto-text em{color:var(--gold);font-style:normal}
+.manifesto-author{
+  margin-top:2.5rem;font-size:0.68rem;
+  letter-spacing:0.3em;text-transform:uppercase;
+  color:rgba(201,168,76,0.45);
+  position:relative;z-index:1;
+}
+
+/* ── ABOUT SPLIT ── */
+.about-split{background:var(--obsidian)}
+.about-inner{
+  max-width:1200px;margin:0 auto;
+  display:grid;grid-template-columns:1fr 1fr;gap:8rem;align-items:center;
+}
+.about-visual{position:relative}
+.about-img-main{
+  width:100%;aspect-ratio:3/4;
+  background:linear-gradient(160deg,#1A1520,#0A0A14);
+  display:flex;align-items:center;justify-content:center;
+  font-size:5rem;position:relative;overflow:hidden;
+}
+.about-img-main::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(201,168,76,0.06) 0%,transparent 50%,rgba(201,168,76,0.03) 100%);
+}
+.about-img-accent{
+  position:absolute;bottom:-3rem;right:-3rem;
+  width:55%;aspect-ratio:1;
+  background:linear-gradient(135deg,#1E1A28,#12101A);
+  border:4px solid var(--obsidian);
+  display:flex;align-items:center;justify-content:center;
+  font-size:3rem;
+}
+.about-img-line{
+  position:absolute;top:2rem;left:-1.5rem;bottom:2rem;width:1px;
+  background:linear-gradient(180deg,transparent,var(--gold),transparent);
+}
+.about-text .sec-sub{max-width:420px}
+.about-stats{
+  display:grid;grid-template-columns:1fr 1fr;gap:0;
+  margin-top:3rem;border:1px solid var(--border);
+}
+.stat{
+  padding:1.8rem;position:relative;
+  border-right:1px solid var(--border);border-bottom:1px solid var(--border);
+  transition:background 0.3s;
+}
+.stat:nth-child(2n){border-right:none}
+.stat:nth-child(3),.stat:nth-child(4){border-bottom:none}
+.stat:hover{background:var(--ghost)}
+.stat-val{
+  font-family:'Libre Baskerville',serif;
+  font-size:2rem;font-weight:700;color:var(--gold);line-height:1;
+}
+.stat-label{
+  font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;
+  color:var(--faint);margin-top:0.4rem;
+}
+
+/* ── MENU ── */
+.menu-sec{
+  background:var(--void);
+  border-top:1px solid var(--border);
+}
+.menu-inner{max-width:1000px;margin:0 auto}
+.menu-header{text-align:center;margin-bottom:4rem}
+.menu-cats{
+  display:flex;justify-content:center;gap:0;
+  border:1px solid var(--border);max-width:fit-content;margin:2.5rem auto 3.5rem;
+}
+.menu-cat-btn{
+  padding:0.7rem 1.8rem;background:none;border:none;cursor:pointer;
+  font-family:'Jost',sans-serif;font-size:0.65rem;
+  letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--faint);transition:all 0.3s;
+  border-right:1px solid var(--border);
+  position:relative;
+}
+.menu-cat-btn:last-child{border-right:none}
+.menu-cat-btn.active{color:var(--gold)}
+.menu-cat-btn.active::before{
+  content:'';position:absolute;inset:0;
+  background:var(--gold-dim);
+}
+.menu-cat-btn span{position:relative;z-index:1}
+.menu-panel{display:none}
+.menu-panel.active{display:block}
+.menu-items{display:flex;flex-direction:column}
+.menu-item{
+  display:grid;grid-template-columns:1fr auto;
+  gap:2rem;align-items:baseline;
+  padding:1.5rem 0;
+  border-bottom:1px solid rgba(201,168,76,0.06);
+  position:relative;overflow:hidden;
+  transition:padding-left 0.4s;
+}
+.menu-item::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:2px;
+  background:var(--gold);transform:scaleY(0);
+  transition:transform 0.4s;transform-origin:bottom;
+}
+.menu-item:hover{padding-left:1rem}
+.menu-item:hover::before{transform:scaleY(1)}
+.menu-item-left{}
+.menu-item-name{
+  font-family:'Libre Baskerville',serif;
+  font-size:1.05rem;font-weight:400;color:var(--cream);
+  display:flex;align-items:center;gap:0.8rem;
+}
+.menu-item-tag{
+  font-size:0.55rem;letter-spacing:0.15em;text-transform:uppercase;
+  padding:0.15rem 0.5rem;border:1px solid;
+}
+.tag-signature{border-color:rgba(201,168,76,0.4);color:var(--gold)}
+.tag-seasonal{border-color:rgba(107,160,80,0.4);color:#7DC860}
+.tag-veg{border-color:rgba(107,160,80,0.3);color:#9BD478}
+.menu-item-desc{
+  font-size:0.75rem;color:var(--faint);line-height:1.6;
+  margin-top:0.4rem;font-weight:300;max-width:560px;
+}
+.menu-item-price{
+  font-family:'Libre Baskerville',serif;
+  font-size:1rem;color:var(--gold);
+  white-space:nowrap;font-style:italic;
+}
+
+/* ── EXPERIENCE ── */
+.experience{background:var(--obsidian)}
+.exp-inner{max-width:1200px;margin:0 auto}
+.exp-header{text-align:center;margin-bottom:5rem}
+.exp-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1px;background:var(--border);
+}
+.exp-card{
+  background:var(--obsidian);
+  padding:3rem 2.5rem;
+  transition:background 0.4s;
+  position:relative;overflow:hidden;
+}
+.exp-card::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  transform:scaleX(0);transition:transform 0.5s;
+}
+.exp-card:hover{background:var(--surface)}
+.exp-card:hover::after{transform:scaleX(1)}
+.exp-card-num{
+  font-family:'Libre Baskerville',serif;
+  font-size:5rem;font-weight:700;font-style:italic;
+  color:rgba(201,168,76,0.05);
+  position:absolute;top:1.5rem;right:1.5rem;
+  line-height:1;pointer-events:none;
+}
+.exp-icon{font-size:1.8rem;margin-bottom:1.5rem}
+.exp-title{
+  font-family:'Libre Baskerville',serif;
+  font-size:1.15rem;color:var(--cream);margin-bottom:0.8rem;
+}
+.exp-desc{font-size:0.78rem;color:var(--faint);line-height:1.8;font-weight:300}
+
+/* ── GALLERY ── */
+.gallery-sec{
+  background:var(--void);
+  border-top:1px solid var(--border);
+  padding:8rem 0;
+}
+.gallery-header{text-align:center;padding:0 2rem;margin-bottom:4rem}
+.gallery-track{
+  display:flex;gap:1.5rem;
+  padding:0 2rem;
+  overflow-x:auto;scroll-snap-type:x mandatory;
+  scrollbar-width:none;-webkit-overflow-scrolling:touch;
+}
+.gallery-track::-webkit-scrollbar{display:none}
+.gallery-item{
+  flex-shrink:0;scroll-snap-align:start;
+  position:relative;overflow:hidden;border-radius:2px;
+  cursor:pointer;
+}
+.gallery-item:nth-child(odd){width:380px;aspect-ratio:3/4}
+.gallery-item:nth-child(even){width:320px;aspect-ratio:4/5;margin-top:3rem}
+.gallery-inner{
+  width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:4rem;transition:transform 0.6s cubic-bezier(0.16,1,0.3,1);
+}
+.gallery-item:hover .gallery-inner{transform:scale(1.05)}
+.gallery-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,transparent 40%,rgba(7,7,10,0.75) 100%);
+  opacity:0;transition:opacity 0.4s;
+}
+.gallery-item:hover .gallery-overlay{opacity:1}
+.gallery-label{
+  position:absolute;bottom:1.5rem;left:1.5rem;
+  font-size:0.68rem;letter-spacing:0.15em;text-transform:uppercase;
+  color:rgba(240,235,224,0.8);
+  transform:translateY(10px);opacity:0;
+  transition:all 0.4s;
+}
+.gallery-item:hover .gallery-label{transform:translateY(0);opacity:1}
+/* color the gallery items */
+.gi-1{background:linear-gradient(135deg,#1A1220,#0D0A16)}
+.gi-2{background:linear-gradient(135deg,#1E1A10,#120E04)}
+.gi-3{background:linear-gradient(135deg,#0E1A14,#081208)}
+.gi-4{background:linear-gradient(135deg,#1A1018,#0D0810)}
+.gi-5{background:linear-gradient(135deg,#1A1814,#100E0A)}
+.gi-6{background:linear-gradient(135deg,#0E1018,#06080E)}
+
+/* ── RESERVATIONS ── */
+.res-sec{
+  background:var(--obsidian);
+  position:relative;overflow:hidden;
+}
+.res-sec::before{
+  content:'';position:absolute;
+  top:0;bottom:0;right:0;width:50%;
+  background:var(--surface);
+}
+.res-inner{
+  max-width:1200px;margin:0 auto;
+  display:grid;grid-template-columns:1fr 1fr;gap:0;
+  position:relative;z-index:1;
+}
+.res-left{
+  padding:6rem 5rem 6rem 2rem;
+  display:flex;flex-direction:column;justify-content:center;
+}
+.res-right{
+  background:var(--surface);
+  padding:6rem 2rem 6rem 5rem;
+  border-left:1px solid var(--border);
+}
+.res-form{display:flex;flex-direction:column;gap:1.2rem}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}
+.form-group{display:flex;flex-direction:column;gap:0.5rem}
+.form-label{
+  font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;
+  color:rgba(201,168,76,0.45);
+}
+.form-input,.form-select,.form-textarea{
+  padding:0.9rem 0;
+  background:transparent;
+  border:none;border-bottom:1px solid rgba(240,235,224,0.1);
+  color:var(--cream);
+  font-family:'Jost',sans-serif;font-size:0.85rem;
+  transition:border-color 0.3s;
+  outline:none;
+}
+.form-input::placeholder{color:rgba(240,235,224,0.15)}
+.form-input:focus,.form-select:focus,.form-textarea:focus{
+  border-bottom-color:var(--gold);
+}
+.form-select{cursor:pointer}
+.form-select option{background:var(--surface);color:var(--cream)}
+.form-textarea{resize:none;min-height:70px}
+.form-submit{
+  margin-top:0.5rem;padding:1rem 2rem;
+  background:var(--gold);color:var(--obsidian);
+  border:none;cursor:pointer;
+  font-family:'Jost',sans-serif;
+  font-size:0.7rem;letter-spacing:0.25em;text-transform:uppercase;
+  font-weight:500;transition:all 0.3s;
+  position:relative;overflow:hidden;
+}
+.form-submit::before{
+  content:'';position:absolute;inset:0;
+  background:var(--gold2);transform:translateX(-101%);
+  transition:transform 0.4s cubic-bezier(0.16,1,0.3,1);
+}
+.form-submit:hover::before{transform:translateX(0)}
+.form-submit span{position:relative;z-index:1}
+
+/* ── TESTIMONIALS ── */
+.testi-sec{
+  background:var(--void);
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  padding:7rem 2rem;
+}
+.testi-inner{max-width:1100px;margin:0 auto}
+.testi-header{text-align:center;margin-bottom:4rem}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--border)}
+.testi-card{
+  background:var(--void);
+  padding:2.5rem;
+  transition:background 0.3s;
+}
+.testi-card:hover{background:var(--surface)}
+.testi-stars{
+  color:var(--gold);font-size:0.65rem;letter-spacing:0.3em;
+  margin-bottom:1.5rem;
+}
+.testi-text{
+  font-family:'Libre Baskerville',serif;
+  font-size:0.95rem;font-style:italic;line-height:1.8;
+  color:var(--mist);margin-bottom:1.8rem;
+  position:relative;
+}
+.testi-text::before{
+  content:'"';
+  font-size:3.5rem;color:rgba(201,168,76,0.1);
+  position:absolute;top:-0.5rem;left:-0.3rem;
+  font-family:'Libre Baskerville',serif;
+  line-height:1;
+}
+.testi-author{display:flex;align-items:center;gap:0.8rem}
+.testi-dot{
+  width:28px;height:28px;border-radius:50%;
+  background:var(--gold-dim);border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.75rem;flex-shrink:0;
+}
+.testi-name{font-size:0.75rem;font-weight:500;color:var(--cream)}
+.testi-where{font-size:0.65rem;color:var(--faint)}
+
+/* ── LOCATION ── */
+.loc-sec{background:var(--obsidian);padding:8rem 2rem}
+.loc-inner{
+  max-width:1200px;margin:0 auto;
+  display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center;
+}
+.loc-map{
+  aspect-ratio:1;background:var(--surface);
+  border:1px solid var(--border);position:relative;
+  overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+}
+.loc-map-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(201,168,76,0.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(201,168,76,0.04) 1px,transparent 1px);
+  background-size:40px 40px;
+}
+.loc-map-center{
+  position:relative;z-index:1;text-align:center;
+  display:flex;flex-direction:column;align-items:center;gap:0.5rem;
+}
+.loc-pin-ring{
+  width:60px;height:60px;border-radius:50%;
+  border:1px solid var(--gold);
+  display:flex;align-items:center;justify-content:center;
+  animation:pulseRing 2.5s ease-in-out infinite;
+}
+@keyframes pulseRing{
+  0%,100%{box-shadow:0 0 0 0 rgba(201,168,76,0.3)}
+  50%{box-shadow:0 0 0 20px rgba(201,168,76,0)}
+}
+.loc-pin-inner{
+  width:30px;height:30px;border-radius:50%;
+  background:var(--gold);display:flex;align-items:center;justify-content:center;
+  font-size:0.9rem;
+}
+.loc-pin-label{
+  font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--gold);margin-top:0.5rem;
+}
+.loc-map-btn{
+  position:absolute;bottom:1.5rem;left:50%;transform:translateX(-50%);
+  padding:0.55rem 1.2rem;border:1px solid var(--border2);
+  color:var(--gold);font-size:0.62rem;letter-spacing:0.15em;
+  text-transform:uppercase;background:rgba(7,7,10,0.8);
+  cursor:pointer;transition:all 0.3s;white-space:nowrap;
+}
+.loc-map-btn:hover{background:var(--gold);color:var(--obsidian);border-color:var(--gold)}
+.loc-details{display:flex;flex-direction:column;gap:2rem;margin-top:3rem}
+.loc-item{display:flex;gap:1.2rem;align-items:flex-start}
+.loc-icon{
+  width:38px;height:38px;flex-shrink:0;
+  border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;font-size:1rem;
+}
+.loc-label{
+  font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;
+  color:rgba(201,168,76,0.4);margin-bottom:0.3rem;
+}
+.loc-val{font-size:0.85rem;color:var(--mist);line-height:1.6;font-weight:300}
+
+/* ── FOOTER ── */
+footer{
+  background:#040405;
+  border-top:1px solid var(--border);
+  padding:4rem 4rem 2rem;
+}
+.footer-inner{
+  max-width:1200px;margin:0 auto;
+  display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:4rem;
+  padding-bottom:3rem;
+  border-bottom:1px solid rgba(201,168,76,0.06);
+}
+.footer-brand-logo{
+  font-family:'Libre Baskerville',serif;
+  font-size:1.4rem;font-style:italic;
+  color:var(--cream);display:block;margin-bottom:0.6rem;
+}
+.footer-brand-tag{
+  font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;
+  color:rgba(201,168,76,0.3);margin-bottom:1rem;
+}
+.footer-brand p{
+  font-size:0.75rem;color:rgba(240,235,224,0.25);
+  line-height:1.8;max-width:200px;font-weight:300;
+}
+.footer-social{display:flex;gap:0.6rem;margin-top:1.5rem}
+.footer-social a{
+  width:30px;height:30px;border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.75rem;text-decoration:none;
+  transition:all 0.3s;
+}
+.footer-social a:hover{border-color:var(--gold);background:var(--gold-dim)}
+.footer-col-title{
+  font-size:0.58rem;letter-spacing:0.25em;text-transform:uppercase;
+  color:rgba(201,168,76,0.25);margin-bottom:1.2rem;
+}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:0.7rem}
+.footer-col a{
+  font-size:0.75rem;color:rgba(240,235,224,0.3);
+  text-decoration:none;transition:color 0.2s;letter-spacing:0.05em;
+}
+.footer-col a:hover{color:var(--gold)}
+.footer-bottom{
+  max-width:1200px;margin:1.5rem auto 0;
+  display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;
+}
+.footer-bottom p,.footer-bottom a{
+  font-size:0.65rem;color:rgba(240,235,224,0.15);
+  text-decoration:none;
+}
+.footer-bottom a:hover{color:var(--gold)}
+
+/* ── MOBILE ── */
+.mobile-nav{
+  position:fixed;inset:0;z-index:99;background:var(--obsidian);
+  padding:6rem 3rem 3rem;
+  transform:translateX(100%);transition:transform 0.5s cubic-bezier(0.16,1,0.3,1);
+  border-left:1px solid var(--border);
+}
+.mobile-nav.open{transform:translateX(0)}
+.mobile-nav ul{list-style:none;display:flex;flex-direction:column;gap:0}
+.mobile-nav ul li{border-bottom:1px solid var(--border)}
+.mobile-nav ul a{
+  display:block;padding:1.3rem 0;
+  font-family:'Libre Baskerville',serif;
+  font-size:1.6rem;font-style:italic;color:var(--cream);
+  text-decoration:none;transition:color 0.2s;
+}
+.mobile-nav ul a:hover{color:var(--gold)}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:2.5rem;right:2.5rem;z-index:500;
+  background:var(--surface);border:1px solid var(--border2);
+  color:var(--gold);padding:0.8rem 1.5rem;
+  font-size:0.72rem;letter-spacing:0.1em;
+  transform:translateY(80px);opacity:0;
+  transition:all 0.4s cubic-bezier(0.16,1,0.3,1);
+}
+.toast.show{transform:translateY(0);opacity:1}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(25px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1024px){
+  .navbar{padding:1.5rem 2rem}
+  .navbar.scrolled{padding:1rem 2rem}
+  .nav-links,.nav-reserve{display:none}
+  .hamburger{display:flex}
+  .about-inner{grid-template-columns:1fr;gap:4rem}
+  .about-img-accent{right:0}
+  .exp-grid{grid-template-columns:1fr 1fr}
+  .testi-grid{grid-template-columns:1fr}
+  .loc-inner{grid-template-columns:1fr;gap:3rem}
+  .res-sec::before{display:none}
+  .res-inner{grid-template-columns:1fr}
+  .res-left{padding:5rem 2rem 3rem}
+  .res-right{padding:3rem 2rem 5rem;border-left:none;border-top:1px solid var(--border);background:var(--surface)}
+  .footer-inner{grid-template-columns:1fr 1fr}
+}
+@media(max-width:600px){
+  section{padding:5rem 1.5rem}
+  .exp-grid{grid-template-columns:1fr}
+  .footer-inner{grid-template-columns:1fr}
+  .form-row{grid-template-columns:1fr}
+  .menu-cats{flex-wrap:wrap;max-width:100%}
+  .about-stats{grid-template-columns:1fr 1fr}
+  html{cursor:auto}
+  .cursor,.cursor-ring{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- AURORA CANVAS -->
+<canvas id="auroraCanvas"></canvas>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <a href="#" class="nav-logo">Obsidian</a>
+  <ul class="nav-links">
+    <li><a href="#nosotros">Nosotros</a></li>
+    <li><a href="#menu">Menú</a></li>
+    <li><a href="#experiencia">Experiencia</a></li>
+    <li><a href="#galeria">Galería</a></li>
+    <li><a href="#ubicacion">Ubicación</a></li>
+  </ul>
+  <a href="#reservaciones" class="nav-reserve">Reservar</a>
+  <button class="hamburger" onclick="toggleMobile()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE NAV -->
+<div class="mobile-nav" id="mobileNav">
+  <ul>
+    <li><a href="#nosotros" onclick="toggleMobile()">Nosotros</a></li>
+    <li><a href="#menu" onclick="toggleMobile()">Menú</a></li>
+    <li><a href="#experiencia" onclick="toggleMobile()">Experiencia</a></li>
+    <li><a href="#galeria" onclick="toggleMobile()">Galería</a></li>
+    <li><a href="#reservaciones" onclick="toggleMobile()">Reservaciones</a></li>
+    <li><a href="#ubicacion" onclick="toggleMobile()">Ubicación</a></li>
+  </ul>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="inicio">
+  <div class="hero-corner tl"></div>
+  <div class="hero-corner tr"></div>
+  <div class="hero-corner bl"></div>
+  <div class="hero-corner br"></div>
+  <div class="hero-content">
+    <div class="hero-pre">Haute Cuisine · San José, Costa Rica</div>
+    <h1 class="hero-logo">Obsi<span class="stroke">dian</span></h1>
+    <p class="hero-tagline">Donde el fuego y la elegancia se encuentran</p>
+    <div class="hero-divider"></div>
+    <div class="hero-btns">
+      <a href="#reservaciones" class="btn-gold"><span>Reservar Mesa</span></a>
+      <a href="#menu" class="btn-ghost">Ver el Menú</a>
+    </div>
+  </div>
+  <div class="hero-scroll" onclick="document.getElementById('nosotros').scrollIntoView({behavior:'smooth'})">
+    <div class="scroll-line"></div>
+    <div class="scroll-text">Descubrir</div>
+  </div>
+</section>
+
+<!-- MANIFESTO -->
+<div class="manifesto">
+  <p class="manifesto-text reveal">
+    "No cocinamos platos. <em>Escribimos memorias</em><br>con cada ingrediente que toca este fuego."
+  </p>
+  <div class="manifesto-author reveal">— Chef Alejandro Vega, Fundador</div>
+</div>
+
+<!-- NOSOTROS -->
+<section class="about-split" id="nosotros">
+  <div class="about-inner">
+    <div class="about-visual reveal-left">
+      <div class="about-img-line"></div>
+      <div class="about-img-main">🔥</div>
+      <div class="about-img-accent">🌿</div>
+    </div>
+    <div class="about-text reveal-right">
+      <div class="sec-num">01 · Nuestra filosofía</div>
+      <h2 class="sec-title">Obsesión por<br>lo <em>extraordinario</em></h2>
+      <p class="sec-sub">En Obsidian cada platillo es el resultado de años de técnica, ingredientes seleccionados con obsesión y un respeto profundo por el producto. Cocinamos con el convencimiento de que la cocina de autor costarricense merece su lugar en la mesa mundial.</p>
+      <p class="sec-sub" style="margin-top:0.8rem">El Chef Alejandro Vega regresó de París y Tokio con una visión: demostrar que los ingredientes de nuestra tierra, en manos correctas, son de clase mundial.</p>
+      <div class="about-stats">
+        <div class="stat">
+          <div class="stat-val">18</div>
+          <div class="stat-label">Años de oficio</div>
+        </div>
+        <div class="stat">
+          <div class="stat-val">3★</div>
+          <div class="stat-label">Guía Meilleur</div>
+        </div>
+        <div class="stat">
+          <div class="stat-val">100%</div>
+          <div class="stat-label">Producto local</div>
+        </div>
+        <div class="stat">
+          <div class="stat-val">28</div>
+          <div class="stat-label">Mesas íntimas</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MENU -->
+<section class="menu-sec" id="menu">
+  <div class="menu-inner">
+    <div class="menu-header reveal">
+      <div class="sec-num" style="justify-content:center">02 · Carta de temporada</div>
+      <h2 class="sec-title">La <em>carta</em></h2>
+    </div>
+    <div class="menu-cats">
+      <button class="menu-cat-btn active" onclick="menuTab('amuse',this)"><span>Mise en Place</span></button>
+      <button class="menu-cat-btn" onclick="menuTab('entrees',this)"><span>Entradas</span></button>
+      <button class="menu-cat-btn" onclick="menuTab('mains',this)"><span>Principales</span></button>
+      <button class="menu-cat-btn" onclick="menuTab('desserts',this)"><span>Postres</span></button>
+      <button class="menu-cat-btn" onclick="menuTab('maridaje',this)"><span>Maridaje</span></button>
+    </div>
+
+    <!-- Mise en Place -->
+    <div class="menu-panel active" id="panel-amuse">
+      <div class="menu-items reveal">
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Bocado de Bienvenida <span class="menu-item-tag tag-signature">Firma</span></div>
+            <div class="menu-item-desc">Selección de tres bocados del chef que cambian con la estación. Esta semana: macaron de queso Turrialba, chupito de sopa negra con espuma de tocino y tostada de palmito con caviar de limón.</div>
+          </div>
+          <div class="menu-item-price">Incluido</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Pan de Masa Madre con Mantequilla de Mar</div>
+            <div class="menu-item-desc">Hogaza horneada cada mañana con fermentación de 48 horas. Mantequilla ahumada con sal Maldon del Pacífico y hierbas del jardín.</div>
+          </div>
+          <div class="menu-item-price">₡3.200</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Tabla de Embutidos de Autor <span class="menu-item-tag tag-seasonal">Temporada</span></div>
+            <div class="menu-item-desc">Charcutería elaborada en casa: lomo de cerdo de Zarcero curado, chorizo de res de altura con romero, paté de foie con confitura de cas. Pan brioche tostado.</div>
+          </div>
+          <div class="menu-item-price">₡9.800</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Entradas -->
+    <div class="menu-panel" id="panel-entrees">
+      <div class="menu-items reveal">
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Ceviche de Pargo en Leche de Tigre de Cas <span class="menu-item-tag tag-signature">Firma</span></div>
+            <div class="menu-item-desc">Pargo rojo del Pacífico curado 4 minutos en leche de tigre con cas, ají amarillo y jengibre. Crocante de yuca, aguacate en brunoise y cilantro microgreens.</div>
+          </div>
+          <div class="menu-item-price">₡12.500</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Tartar de Res con Trufa Negra y Yema Curada</div>
+            <div class="menu-item-desc">Lomo de res Wagyu local cortado a cuchillo. Alcaparras, mostaza antigua, ralladura de trufa negra. Yema curada en sal y azúcar por 48 horas. Crujiente de pan de centeno.</div>
+          </div>
+          <div class="menu-item-price">₡15.800</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Ravioli Abierto de Langosta y Palmito <span class="menu-item-tag tag-seasonal">Temporada</span></div>
+            <div class="menu-item-desc">Lámina de pasta fresca sobre bisque de caparazón reducido, medallones de langosta de Limón, palmito confitado y mantequilla de coral. Cebollino y flores de ajo.</div>
+          </div>
+          <div class="menu-item-price">₡18.500</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Consomé de Pejibaye con Aceite de Cilantro <span class="menu-item-tag tag-veg">Vegano</span></div>
+            <div class="menu-item-desc">Caldo translúcido de pejibaye cocido 6 horas, clarificado. Aceite verde de cilantro, brunoise de vegetales de temporada y espuma de leche de coco. Servido en copa caliente.</div>
+          </div>
+          <div class="menu-item-price">₡9.200</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Principales -->
+    <div class="menu-panel" id="panel-mains">
+      <div class="menu-items reveal">
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Lomo de Res Wagyu con Demi-glace de Café Tarrazú <span class="menu-item-tag tag-signature">Estrella</span></div>
+            <div class="menu-item-desc">Corte de 220g de Wagyu costarricense. Cocinado sous-vide a 55°C y sellado en mantequilla noisette. Demi-glace reducido con café natural de Los Santos. Puré ahumado de papa criolla y puerro confitado.</div>
+          </div>
+          <div class="menu-item-price">₡38.000</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Pargo Entero en Costra de Hierbas</div>
+            <div class="menu-item-desc">Pargo de 600g del Pacífico en costra de perejil, tomillo y ajo negro. Horneado en sal de mar. Emulsión de mantequilla con vino blanco costarricense, alcaparras y limón meyer. Gnocchi de yuca.</div>
+          </div>
+          <div class="menu-item-price">₡28.500</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Pato Confitado con Mole de Cacao de Limón <span class="menu-item-tag tag-seasonal">Temporada</span></div>
+            <div class="menu-item-desc">Pierna de pato confitada 8 horas en su propia grasa. Mole artesanal con 14 ingredientes y cacao 72% de Limón. Arroz negro meloso, mandarina en gel y pepitas tostadas.</div>
+          </div>
+          <div class="menu-item-price">₡32.000</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Menú Degustación 7 Tiempos <span class="menu-item-tag tag-signature">Exclusivo</span></div>
+            <div class="menu-item-desc">La experiencia completa de Obsidian. Siete tiempos diseñados por el Chef Vega con los mejores ingredientes de temporada. Maridaje opcional. Disponible solo con reservación previa de 24 horas.</div>
+          </div>
+          <div class="menu-item-price">₡85.000</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Postres -->
+    <div class="menu-panel" id="panel-desserts">
+      <div class="menu-items reveal">
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Soufflé de Chocolate 72% con Helado de Vainilla Tahitiana <span class="menu-item-tag tag-signature">Firma</span></div>
+            <div class="menu-item-desc">Soufflé hecho al momento con cacao de Limón. 12 minutos de espera necesarios. Helado de vainilla de Tahití infusionado en crema. Salsa caliente de caramelo y flor de sal.</div>
+          </div>
+          <div class="menu-item-price">₡9.800</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Tarta Tatin de Cas con Crema Normanda</div>
+            <div class="menu-item-desc">Reinterpretación tropical de la clásica francesa. Cas caramelizado con mantequilla y azúcar morena. Crema normanda montada en frío. Caramelo líquido con ron artesanal.</div>
+          </div>
+          <div class="menu-item-price">₡8.200</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Esfera de Mango y Coco con Sorpresa Interior <span class="menu-item-tag tag-seasonal">Temporada</span></div>
+            <div class="menu-item-desc">Esfera de chocolate blanco que se derrite con caramelo caliente. Interior de mousse de mango Tommy y gelée de leche de coco. Base de dacquoise de almendra y coco tostado.</div>
+          </div>
+          <div class="menu-item-price">₡9.200</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Maridaje -->
+    <div class="menu-panel" id="panel-maridaje">
+      <div class="menu-items reveal">
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Maridaje de 5 Vinos con Degustación <span class="menu-item-tag tag-signature">Sommelier</span></div>
+            <div class="menu-item-desc">Selección de nuestro sommelier para acompañar el menú de degustación. 5 vinos de 5 países distintos, 2 de ellos de producción natural. Copa por tiempo incluida.</div>
+          </div>
+          <div class="menu-item-price">₡38.000</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Cóctel de Autor — Obsidian Negroni</div>
+            <div class="menu-item-desc">Gin artesanal costarricense, Campari, vermut rosso y tintura de cacao de Limón. Servido sobre una roca de hielo esculpida. Piel de naranja flameada.</div>
+          </div>
+          <div class="menu-item-price">₡8.500</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Mocktail Jardín de Obsidian <span class="menu-item-tag tag-veg">Sin Alcohol</span></div>
+            <div class="menu-item-desc">Agua de rosas, pepino, maracuyá clarificado, agua con gas de altura y azúcar de caña. Decorado con pétalos de flores comestibles del jardín de la casa.</div>
+          </div>
+          <div class="menu-item-price">₡5.200</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Café de Especialidad con Petit Fours</div>
+            <div class="menu-item-desc">Café de Los Santos preparado en método Chemex. Acompañado de tres petit fours del día: trufa de chocolate, gel de maracuyá y macaron de temporada.</div>
+          </div>
+          <div class="menu-item-price">₡5.800</div>
+        </div>
+      </div>
+    </div>
+
+    <p style="text-align:center;margin-top:2.5rem;font-size:0.7rem;color:rgba(240,235,224,0.2);letter-spacing:0.1em;">
+      Carta de temporada · Los precios incluyen IVA · Informe alergias a su sommelier
+    </p>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section class="experience" id="experiencia">
+  <div class="exp-inner">
+    <div class="exp-header reveal">
+      <div class="sec-num" style="justify-content:center">03 · Por qué Obsidian</div>
+      <h2 class="sec-title">Una velada <em>sin igual</em></h2>
+    </div>
+    <div class="exp-grid">
+      <div class="exp-card reveal">
+        <div class="exp-card-num">01</div>
+        <div class="exp-icon">🌱</div>
+        <div class="exp-title">Producto de temporada</div>
+        <div class="exp-desc">Trabajamos con 24 productores costarricenses. El menú cambia cada semana según lo que llega fresco del campo. Nunca el mismo plato dos semanas seguidas.</div>
+      </div>
+      <div class="exp-card reveal" style="transition-delay:0.12s">
+        <div class="exp-card-num">02</div>
+        <div class="exp-icon">👨‍🍳</div>
+        <div class="exp-title">Menú de degustación</div>
+        <div class="exp-desc">7 tiempos diseñados personalmente por el Chef Vega. Disponible de jueves a domingo. Requiere reservación con 24 horas de anticipación y mínimo 2 personas.</div>
+      </div>
+      <div class="exp-card reveal" style="transition-delay:0.24s">
+        <div class="exp-card-num">03</div>
+        <div class="exp-icon">🍷</div>
+        <div class="exp-title">Carta de vinos</div>
+        <div class="exp-desc">Más de 80 etiquetas curadas por nuestro sommelier. Énfasis en vinos naturales y biodinámicos de pequeños productores europeos y sudamericanos.</div>
+      </div>
+      <div class="exp-card reveal" style="transition-delay:0.36s">
+        <div class="exp-card-num">04</div>
+        <div class="exp-icon">🎼</div>
+        <div class="exp-title">Ambiente curado</div>
+        <div class="exp-desc">Música en vivo los viernes con cuarteto de cámara. Sala íntima de 28 mesas. Diseño de interiores en madera negra, obsidiana natural y luz cálida puntual.</div>
+      </div>
+      <div class="exp-card reveal" style="transition-delay:0.48s">
+        <div class="exp-card-num">05</div>
+        <div class="exp-icon">🎂</div>
+        <div class="exp-title">Mesa privada</div>
+        <div class="exp-desc">Salón privado para hasta 16 personas. Menú personalizado para celebraciones, cenas de negocios y ocasiones especiales. Decoración y carta coordinadas.</div>
+      </div>
+      <div class="exp-card reveal" style="transition-delay:0.60s">
+        <div class="exp-card-num">06</div>
+        <div class="exp-icon">🌍</div>
+        <div class="exp-title">Reconocimientos</div>
+        <div class="exp-desc">Incluido en los 50 Mejores Restaurantes de Latinoamérica 2024. Premio Mejor Chef Joven de Costa Rica 2022. 3 estrellas Guía Meilleur.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section class="gallery-sec" id="galeria">
+  <div class="gallery-header reveal">
+    <div class="sec-num" style="justify-content:center">04 · Galería</div>
+    <h2 class="sec-title">Cada plato, <em>una obra</em></h2>
+  </div>
+  <div class="gallery-track reveal">
+    <div class="gallery-item gi-1">
+      <div class="gallery-inner">🥩</div>
+      <div class="gallery-overlay"></div>
+      <div class="gallery-label">Wagyu & Café Tarrazú</div>
+    </div>
+    <div class="gallery-item gi-2">
+      <div class="gallery-inner">🦞</div>
+      <div class="gallery-overlay"></div>
+      <div class="gallery-label">Ravioli de Langosta</div>
+    </div>
+    <div class="gallery-item gi-3">
+      <div class="gallery-inner">🌿</div>
+      <div class="gallery-overlay"></div>
+      <div class="gallery-label">Jardín de productores</div>
+    </div>
+    <div class="gallery-item gi-4">
+      <div class="gallery-inner">🍫</div>
+      <div class="gallery-overlay"></div>
+      <div class="gallery-label">Soufflé 72%</div>
+    </div>
+    <div class="gallery-item gi-5">
+      <div class="gallery-inner">🍷</div>
+      <div class="gallery-overlay"></div>
+      <div class="gallery-label">Maridaje de autor</div>
+    </div>
+    <div class="gallery-item gi-6">
+      <div class="gallery-inner">🔥</div>
+      <div class="gallery-overlay"></div>
+      <div class="gallery-label">El fuego sagrado</div>
+    </div>
+  </div>
+</section>
+
+<!-- RESERVACIONES -->
+<section class="res-sec" id="reservaciones">
+  <div class="res-inner">
+    <div class="res-left reveal-left">
+      <div class="sec-num">05 · Reserve</div>
+      <h2 class="sec-title">Su mesa le<br><em>espera</em></h2>
+      <p class="sec-sub">Cada servicio es una experiencia limitada a 28 mesas. Le recomendamos reservar con al menos 3 días de anticipación, especialmente los fines de semana.</p>
+      <p class="sec-sub" style="margin-top:1rem">Para el menú de degustación, reservación obligatoria con 24 horas de anticipación.</p>
+      <div style="margin-top:2.5rem;display:flex;flex-direction:column;gap:0.8rem;">
+        <div style="display:flex;align-items:center;gap:0.8rem;">
+          <div style="width:1px;height:30px;background:var(--gold);opacity:0.4"></div>
+          <span style="font-size:0.75rem;color:var(--faint)">Mar–Jue: 7:00 pm – 10:30 pm</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:0.8rem;">
+          <div style="width:1px;height:30px;background:var(--gold);opacity:0.4"></div>
+          <span style="font-size:0.75rem;color:var(--faint)">Vie–Sáb: 6:30 pm – 11:30 pm (música en vivo)</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:0.8rem;">
+          <div style="width:1px;height:30px;background:var(--gold);opacity:0.4"></div>
+          <span style="font-size:0.75rem;color:var(--faint)">Dom: 1:00 pm – 9:00 pm</span>
+        </div>
+      </div>
+    </div>
+    <div class="res-right reveal-right">
+      <form class="res-form" onsubmit="submitRes(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Nombre</label>
+            <input class="form-input" type="text" placeholder="Su nombre" required/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Teléfono</label>
+            <input class="form-input" type="tel" placeholder="+506 0000-0000" required/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Fecha</label>
+            <input class="form-input" type="date" required/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Hora</label>
+            <select class="form-select" required>
+              <option value="">Seleccionar</option>
+              <option>1:00 pm</option><option>6:30 pm</option>
+              <option>7:00 pm</option><option>7:30 pm</option>
+              <option>8:00 pm</option><option>8:30 pm</option>
+              <option>9:00 pm</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Comensales</label>
+            <select class="form-select" required>
+              <option value="">¿Cuántos?</option>
+              <option>1</option><option>2</option><option>3</option>
+              <option>4</option><option>5–6</option>
+              <option>7–8</option><option>Mesa privada (9+)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Experiencia</label>
+            <select class="form-select">
+              <option>À la carte</option>
+              <option>Menú degustación (7 tiempos)</option>
+              <option>Mesa privada</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Ocasión / Notas especiales</label>
+          <textarea class="form-textarea" placeholder="Alergias, celebración especial, preferencias…"></textarea>
+        </div>
+        <button type="submit" class="form-submit"><span>Solicitar Reservación →</span></button>
+        <p style="text-align:center;font-size:0.62rem;color:rgba(240,235,224,0.18);margin-top:0.5rem;letter-spacing:0.08em;">Confirmación por WhatsApp en menos de 2 horas</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testi-sec">
+  <div class="testi-inner">
+    <div class="testi-header reveal">
+      <div class="sec-num" style="justify-content:center">06 · Voces de la mesa</div>
+      <h2 class="sec-title">Lo que <em>dicen</em></h2>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card reveal">
+        <div class="testi-stars">★ ★ ★ ★ ★</div>
+        <div class="testi-text">El Wagyu con café de Tarrazú fue revelador. Nunca pensé que un ingrediente costarricense podría llevar un plato a ese nivel. Obsidian cambió mi perspectiva de la cocina de este país.</div>
+        <div class="testi-author">
+          <div class="testi-dot">👤</div>
+          <div>
+            <div class="testi-name">Valentina Orozco</div>
+            <div class="testi-where">San José · Google Reviews</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card reveal" style="transition-delay:0.12s">
+        <div class="testi-stars">★ ★ ★ ★ ★</div>
+        <div class="testi-text">Vinimos por nuestro aniversario de bodas y el menú de degustación fue la experiencia gastronómica más memorable de nuestras vidas. Cada tiempo, una historia. El servicio, impecable.</div>
+        <div class="testi-author">
+          <div class="testi-dot">👤</div>
+          <div>
+            <div class="testi-name">Ricardo & Mónica</div>
+            <div class="testi-where">Heredia · TripAdvisor</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card reveal" style="transition-delay:0.24s">
+        <div class="testi-stars">★ ★ ★ ★ ★</div>
+        <div class="testi-text">Traje a clientes de Madrid y quedaron sin palabras. El Chef Vega salió a saludar personalmente, explicó cada plato con pasión. Regresaron tres meses después por su cuenta.</div>
+        <div class="testi-author">
+          <div class="testi-dot">👤</div>
+          <div>
+            <div class="testi-name">Andrés Molina</div>
+            <div class="testi-where">Escazú · Instagram</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LOCATION -->
+<section class="loc-sec" id="ubicacion">
+  <div class="loc-inner">
+    <div class="reveal-left">
+      <div class="sec-num">07 · Encuentrenos</div>
+      <h2 class="sec-title">En el corazón<br>de <em>Escazú</em></h2>
+      <div class="loc-details">
+        <div class="loc-item">
+          <div class="loc-icon">📍</div>
+          <div>
+            <div class="loc-label">Dirección</div>
+            <div class="loc-val">200m sur del Centro Comercial Multiplaza<br>Escazú, San José</div>
+          </div>
+        </div>
+        <div class="loc-item">
+          <div class="loc-icon">🕐</div>
+          <div>
+            <div class="loc-label">Horario</div>
+            <div class="loc-val">Martes – Jueves: 7:00 pm – 10:30 pm<br>Viernes – Sábado: 6:30 pm – 11:30 pm<br>Domingo: 1:00 pm – 9:00 pm</div>
+          </div>
+        </div>
+        <div class="loc-item">
+          <div class="loc-icon">📞</div>
+          <div>
+            <div class="loc-label">Contacto</div>
+            <div class="loc-val">+506 4000-0000<br>WhatsApp: +506 8000-0000<br>info@obsidian.cr</div>
+          </div>
+        </div>
+        <div class="loc-item">
+          <div class="loc-icon">🚗</div>
+          <div>
+            <div class="loc-label">Estacionamiento</div>
+            <div class="loc-val">Valet parking cortesía todos los días<br>Estacionamiento privado de seguridad</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="loc-map reveal-right">
+      <div class="loc-map-grid"></div>
+      <div class="loc-map-center">
+        <div class="loc-pin-ring">
+          <div class="loc-pin-inner">📍</div>
+        </div>
+        <div class="loc-pin-label">Obsidian · Escazú</div>
+      </div>
+      <button class="loc-map-btn" onclick="window.open('https://maps.google.com/?q=Escazu+San+Jose+Costa+Rica','_blank')">Ver en Google Maps →</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <span class="footer-brand-logo">Obsidian</span>
+      <div class="footer-brand-tag">Haute Cuisine · Escazú, CR</div>
+      <p>Cocina de autor costarricense. Ingredientes de temporada, técnica de vanguardia y respeto profundo por el producto.</p>
+      <div class="footer-social">
+        <a href="#" title="Instagram">📸</a>
+        <a href="#" title="Facebook">👍</a>
+        <a href="#" title="WhatsApp">💬</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">La carta</div>
+      <ul>
+        <li><a href="#menu">Mise en Place</a></li>
+        <li><a href="#menu">Entradas</a></li>
+        <li><a href="#menu">Principales</a></li>
+        <li><a href="#menu">Postres</a></li>
+        <li><a href="#menu">Maridaje</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Obsidian</div>
+      <ul>
+        <li><a href="#nosotros">Nuestra historia</a></li>
+        <li><a href="#experiencia">Experiencia</a></li>
+        <li><a href="#galeria">Galería</a></li>
+        <li><a href="#reservaciones">Reservaciones</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Contacto</div>
+      <ul>
+        <li><a href="tel:+50640000000">+506 4000-0000</a></li>
+        <li><a href="#">WhatsApp directo</a></li>
+        <li><a href="#">Mesa privada</a></li>
+        <li><a href="#ubicacion">Cómo llegar</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2024 Obsidian Haute Cuisine · Todos los derechos reservados</p>
+    <p>Diseño por <a href="#">MenúDigitalPro</a></p>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── AURORA CANVAS ──────────────────────────────────────────────────────────
+(function(){
+  const canvas = document.getElementById('auroraCanvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, t = 0;
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const blobs = [
+    { x:0.5, y:0.5, r:0.55, color:'rgba(201,168,76,', speed:0.00018, ox:0.1, oy:0.12 },
+    { x:0.3, y:0.3, r:0.40, color:'rgba(180,120,30,',  speed:0.00024, ox:0.15, oy:0.08 },
+    { x:0.7, y:0.7, r:0.35, color:'rgba(120,90,20,',   speed:0.00020, ox:0.08, oy:0.18 },
+    { x:0.2, y:0.6, r:0.30, color:'rgba(201,168,76,',  speed:0.00015, ox:0.20, oy:0.10 },
+  ];
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#07070A';
+    ctx.fillRect(0, 0, W, H);
+
+    blobs.forEach((b, i) => {
+      const px = (b.x + Math.sin(t * b.speed * 1000 + i) * b.ox) * W;
+      const py = (b.y + Math.cos(t * b.speed * 800  + i) * b.oy) * H;
+      const r  = b.r * Math.min(W, H);
+      const g  = ctx.createRadialGradient(px, py, 0, px, py, r);
+      g.addColorStop(0,   b.color + '0.08)');
+      g.addColorStop(0.5, b.color + '0.04)');
+      g.addColorStop(1,   b.color + '0)');
+      ctx.beginPath();
+      ctx.arc(px, py, r, 0, Math.PI * 2);
+      ctx.fillStyle = g;
+      ctx.fill();
+    });
+    t++;
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ── CUSTOM CURSOR ──────────────────────────────────────────────────────────
+const cur = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+function animCursor() {
+  cur.style.left  = mx + 'px'; cur.style.top  = my + 'px';
+  rx += (mx - rx) * 0.12;  ry += (my - ry) * 0.12;
+  ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+  requestAnimationFrame(animCursor);
+}
+animCursor();
+document.querySelectorAll('a,button,.gallery-item,.menu-item,.exp-card,.testi-card').forEach(el => {
+  el.addEventListener('mouseenter', () => { cur.classList.add('hover'); ring.classList.add('hover'); });
+  el.addEventListener('mouseleave', () => { cur.classList.remove('hover'); ring.classList.remove('hover'); });
+});
+
+// ── NAVBAR ─────────────────────────────────────────────────────────────────
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 80);
+});
+
+// ── MENU TABS ──────────────────────────────────────────────────────────────
+function menuTab(id, btn) {
+  document.querySelectorAll('.menu-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.menu-cat-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ── MOBILE NAV ─────────────────────────────────────────────────────────────
+function toggleMobile() {
+  document.getElementById('mobileNav').classList.toggle('open');
+}
+
+// ── SCROLL REVEAL ──────────────────────────────────────────────────────────
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08, rootMargin: '0px 0px -60px 0px' });
+document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el => obs.observe(el));
+
+// ── RESERVATION ────────────────────────────────────────────────────────────
+function submitRes(e) {
+  e.preventDefault();
+  const t = document.getElementById('toast');
+  t.textContent = '✓ Solicitud recibida — confirmaremos en breve';
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 4000);
+  e.target.reset();
+}
+
+// ── TOAST ──────────────────────────────────────────────────────────────────
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>
